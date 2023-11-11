@@ -17,7 +17,6 @@
 package com.github.springtestdbunit;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -278,14 +277,6 @@ public class DbUnitRunner {
 			allAnnotations.addAll(this.classAnnotations);
 			allAnnotations.addAll(this.methodAnnotations);
 			this.allAnnotations = Collections.unmodifiableList(allAnnotations);
-		}
-
-		private List<T> getAnnotations(AnnotatedElement element, Class<? extends Annotation> container,
-				Class<T> annotation) {
-			List<T> annotations = new ArrayList<>();
-			addAnnotationToList(annotations, AnnotationUtils.findAnnotation(element, annotation));
-			addRepeatableAnnotationsToList(annotations, AnnotationUtils.findAnnotation(element, container));
-			return Collections.unmodifiableList(annotations);
 		}
 
 		private List<T> getClassAnnotations(Class<?> element, Class<? extends Annotation> container,
