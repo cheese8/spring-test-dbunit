@@ -49,10 +49,27 @@ public class NonStrictDatabaseAssertion implements DatabaseAssertion {
 		}
 	}
 
+	public void assertEquals(IDataSet expectedDataSet, IDataSet actualDataSet, String[] ignoreCols)
+			throws DatabaseUnitException {
+		for (String tableName : expectedDataSet.getTableNames()) {
+			ITable expectedTable = expectedDataSet.getTable(tableName);
+			ITable actualTable = actualDataSet.getTable(tableName);
+			assertEquals(expectedTable, actualTable, ignoreCols);
+		}
+	}
+
 	public void assertEquals(ITable expectedTable, ITable actualTable, List<IColumnFilter> columnFilters)
 			throws DatabaseUnitException {
 		Set<String> ignoredColumns = getColumnsToIgnore(expectedTable.getTableMetaData(),
 				actualTable.getTableMetaData(), columnFilters);
+		Assertion.assertEqualsIgnoreCols(expectedTable, actualTable,
+				ignoredColumns.toArray(new String[ignoredColumns.size()]));
+	}
+
+	public void assertEquals(ITable expectedTable, ITable actualTable, String[] ignoreCols)
+			throws DatabaseUnitException {
+		Set<String> ignoredColumns = getColumnsToIgnore(expectedTable.getTableMetaData(),
+				actualTable.getTableMetaData(), ignoreCols);
 		Assertion.assertEqualsIgnoreCols(expectedTable, actualTable,
 				ignoredColumns.toArray(new String[ignoredColumns.size()]));
 	}
@@ -65,6 +82,24 @@ public class NonStrictDatabaseAssertion implements DatabaseAssertion {
 		Set<String> ignoredColumns = new LinkedHashSet<>();
 		for (IColumnFilter filter : columnFilters) {
 			FilteredTableMetaData filteredExpectedMetaData = new FilteredTableMetaData(expectedMetaData, filter);
+			ignoredColumns.addAll(getColumnsToIgnore(filteredExpectedMetaData, actualMetaData));
+		}
+		return ignoredColumns;
+	}
+
+	private Set<String> getColumnsToIgnore(ITableMetaData expectedMetaData, ITableMetaData actualMetaData,
+										   String[] ignoreCols) throws DataSetException {
+		if (ignoreCols.length == 0) {
+			return getColumnsToIgnore(expectedMetaData, actualMetaData);
+		}
+		Set<String> ignoredColumns = new LinkedHashSet<>();
+		for (String col : ignoreCols) {
+			FilteredTableMetaData filteredExpectedMetaData = new FilteredTableMetaData(expectedMetaData, new IColumnFilter() {
+				@Override
+				public boolean accept(String tableName, Column column) {
+					return !column.getColumnName().equalsIgnoreCase(col);
+				}
+			});
 			ignoredColumns.addAll(getColumnsToIgnore(filteredExpectedMetaData, actualMetaData));
 		}
 		return ignoredColumns;

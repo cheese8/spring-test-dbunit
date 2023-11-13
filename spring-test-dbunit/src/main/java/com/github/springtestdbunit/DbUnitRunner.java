@@ -131,18 +131,22 @@ public class DbUnitRunner {
 			}
 			DatabaseAssertion assertion = annotation.assertionMode().getDatabaseAssertion();
 			List<IColumnFilter> columnFilters = getColumnFilters(annotation);
+			String[] ignoreCols = getIgnoreCols(annotation);
 			if (StringUtils.hasLength(query)) {
 				Assert.hasLength(table, "The table name must be specified when using a SQL query");
 				ITable expectedTable = expectedDataSet.getTable(table);
 				ITable actualTable = connection.createQueryTable(table, query);
 				assertion.assertEquals(expectedTable, actualTable, columnFilters);
+				assertion.assertEquals(expectedTable, actualTable, ignoreCols);
 			} else if (StringUtils.hasLength(table)) {
 				ITable actualTable = connection.createTable(table);
 				ITable expectedTable = expectedDataSet.getTable(table);
 				assertion.assertEquals(expectedTable, actualTable, columnFilters);
+				assertion.assertEquals(expectedTable, actualTable, ignoreCols);
 			} else {
 				IDataSet actualDataSet = connection.createDataSet();
 				assertion.assertEquals(expectedDataSet, actualDataSet, columnFilters);
+				assertion.assertEquals(expectedDataSet, actualDataSet, ignoreCols);
 			}
 		}
 	}
@@ -213,6 +217,10 @@ public class DbUnitRunner {
 			columnFilters.add(columnFilterClass.getDeclaredConstructor().newInstance());
 		}
 		return columnFilters;
+	}
+
+	private String[] getIgnoreCols(ExpectedDatabase annotation) throws Exception {
+		return annotation.ignoreCols();
 	}
 
 	private org.dbunit.operation.DatabaseOperation getDbUnitDatabaseOperation(DbUnitTestContext testContext,

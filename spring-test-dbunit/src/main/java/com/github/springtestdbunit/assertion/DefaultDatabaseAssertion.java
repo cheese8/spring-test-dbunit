@@ -37,7 +37,17 @@ public class DefaultDatabaseAssertion implements DatabaseAssertion {
 		Assertion.assertEquals(expectedDataSet, actualDataSet);
 	}
 
+	public void assertEquals(IDataSet expectedDataSet, IDataSet actualDataSet, String[] ignoreCols)
+			throws DatabaseUnitException {
+		Assertion.assertEquals(expectedDataSet, actualDataSet);
+	}
+
 	public void assertEquals(ITable expectedTable, ITable actualTable, List<IColumnFilter> columnFilters)
+			throws DatabaseUnitException {
+		Assertion.assertEquals(expectedTable, actualTable);
+	}
+
+	public void assertEquals(ITable expectedTable, ITable actualTable, String[] ignoreCols)
 			throws DatabaseUnitException {
 		Assertion.assertEquals(expectedTable, actualTable);
 	}
