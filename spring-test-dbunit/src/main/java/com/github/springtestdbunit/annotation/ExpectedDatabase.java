@@ -101,4 +101,13 @@ public @interface ExpectedDatabase {
 	 * @return column filters to apply
 	 */
 	Class<? extends IColumnFilter>[] columnFilters() default {};
+
+	/**
+	 * A set of {@link String[]} that will be applied to column comparison when using non-strict {@link DatabaseAssertionMode}.
+	 * <p>
+	 * Specify this when you want to use DTD with your expected dataset XML file but want to exclude some columns from
+	 * comparison.
+	 * @return column filters to apply
+	 */
+	String[] ignoreCols() default {};
 }

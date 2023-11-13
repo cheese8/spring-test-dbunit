@@ -43,7 +43,7 @@ public class ExpectedNonStrictWithDtdTest {
 
 	@Test
 	@ExpectedDatabase(value = "/META-INF/db/expected_nonstrict_with_dtd.xml", assertionMode = DatabaseAssertionMode.NON_STRICT, columnFilters = {
-			SampleEntityIdExclusionFilter.class })
+			SampleEntityIdExclusionFilter.class }, ignoreCols = "id")
 	public void shouldNotFailEvenThoughExpectedTableDoesNotSpecifyAllColumns() {
 		this.entityAssert.assertValues("existing1", "existing2");
 	}

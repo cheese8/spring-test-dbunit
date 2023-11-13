@@ -41,6 +41,9 @@ public interface DatabaseAssertion {
 	void assertEquals(IDataSet expectedDataSet, IDataSet actualDataSet, List<IColumnFilter> columnFilters)
 			throws DatabaseUnitException;
 
+	void assertEquals(IDataSet expectedDataSet, IDataSet actualDataSet, String[] ignoreCols)
+			throws DatabaseUnitException;
+
 	/**
 	 * Assert that the specified {@link IDataSet dataSets} are conceptually equal.
 	 * @param expectedTable the expected table
@@ -49,6 +52,9 @@ public interface DatabaseAssertion {
 	 * @throws DatabaseUnitException if the tables are not equal
 	 */
 	void assertEquals(ITable expectedTable, ITable actualTable, List<IColumnFilter> columnFilters)
+			throws DatabaseUnitException;
+
+	void assertEquals(ITable expectedTable, ITable actualTable, String[] ignoreCols)
 			throws DatabaseUnitException;
 
 }
