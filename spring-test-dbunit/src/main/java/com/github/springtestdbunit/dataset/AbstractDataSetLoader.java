@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2016 the original author or authors
+ * Copyright 2002-2023 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,7 @@
 package com.github.springtestdbunit.dataset;
 
 import org.dbunit.dataset.IDataSet;
-import org.springframework.core.io.ClassRelativeResourceLoader;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.*;
 
 /**
  * Abstract data set loader, which provides a basis for concrete implementations of the {@link DataSetLoader} strategy.
@@ -46,15 +44,27 @@ public abstract class AbstractDataSetLoader implements DataSetLoader {
 	 * @see com.github.springtestdbunit.dataset.DataSetLoader#loadDataSet(Class, String) java.lang.String)
 	 */
 	public IDataSet loadDataSet(Class<?> testClass, String location) throws Exception {
-		ResourceLoader resourceLoader = getResourceLoader(testClass);
-		String[] resourceLocations = getResourceLocations(location);
-		for (String resourceLocation : resourceLocations) {
-			Resource resource = resourceLoader.getResource(resourceLocation);
-			if (resource.exists()) {
-				return createDataSet(resource);
-			}
+		Resource resource = getClassRelativeResource(testClass, location);
+		if (resource.exists()) {
+			return createDataSet(resource);
+		}
+		resource = getClasspathResource(location);
+		if (resource.exists()) {
+			return createDataSet(resource);
 		}
 		return null;
+	}
+
+	private Resource getClassRelativeResource(Class<?> testClass, String location) {
+		ResourceLoader resourceLoader = getResourceLoader(testClass);
+		return resourceLoader.getResource(location);
+	}
+
+	private Resource getClasspathResource(String location) {
+		ResourceLoader resourceLoader = new DefaultResourceLoader();
+		String classpathLocation = location.startsWith(ResourceLoader.CLASSPATH_URL_PREFIX) ? location :
+				ResourceLoader.CLASSPATH_URL_PREFIX + location;
+		return resourceLoader.getResource(classpathLocation);
 	}
 
 	/**
