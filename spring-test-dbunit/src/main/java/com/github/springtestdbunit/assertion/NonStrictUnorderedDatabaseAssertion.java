@@ -44,4 +44,13 @@ public class NonStrictUnorderedDatabaseAssertion extends NonStrictDatabaseAssert
 		super.assertEquals(expectedSortedTable, actualSortedTable, columnFilters);
 	}
 
+	@Override
+	public void assertEquals(ITable expectedSortedTable, ITable actualSortedTable, String[] ignoreCols)
+			throws DatabaseUnitException {
+		Column[] expectedColumns = expectedSortedTable.getTableMetaData().getColumns();
+		expectedSortedTable = new SortedTable(expectedSortedTable, expectedColumns);
+		actualSortedTable = new SortedTable(actualSortedTable, expectedColumns);
+		super.assertEquals(expectedSortedTable, actualSortedTable, ignoreCols);
+	}
+
 }
