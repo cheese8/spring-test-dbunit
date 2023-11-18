@@ -27,16 +27,13 @@ import org.springframework.core.io.*;
  * @author Phillip Webb
  *
  * @see #getResourceLoader
- * @see #getResourceLocations
  * @see #createDataSet(Resource)
  */
 public abstract class AbstractDataSetLoader implements DataSetLoader {
 
 	/**
-	 * Loads a {@link IDataSet dataset} from {@link Resource}s obtained from the specified <code>location</code>. Each
-	 * <code>location</code> can be mapped to a number of potential {@link #getResourceLocations resources}, the first
-	 * resource that {@link Resource#exists() exists} will be used. {@link Resource}s are loaded using the
-	 * {@link ResourceLoader} returned from {@link #getResourceLoader}.
+	 * Loads a {@link IDataSet dataset} from {@link Resource}s obtained from the specified <code>location</code>.
+	 * {@link Resource}s are loaded using the {@link ResourceLoader} returned from {@link #getResourceLoader}.
 	 * <p>
 	 * If no resource can be found then <code>null</code> will be returned.
 	 *
@@ -74,16 +71,6 @@ public abstract class AbstractDataSetLoader implements DataSetLoader {
 	 */
 	protected ResourceLoader getResourceLoader(Class<?> testClass) {
 		return new ClassRelativeResourceLoader(testClass);
-	}
-
-	/**
-	 * Get the resource locations that should be considered when attempting to load a dataset from the specified
-	 * location.
-	 * @param location The source location
-	 * @return an array of potential resource locations
-	 */
-	protected String[] getResourceLocations(String location) {
-		return new String[] { location };
 	}
 
 	/**

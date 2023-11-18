@@ -80,9 +80,17 @@ public class FlatXmlDataSetLoaderTest {
 
 	@Test
 	public void testBuildDataSetFromStream() throws Exception {
+		buildDataSetFromStream("test-column-sensing-classpath.xml");
+	}
+
+	@Test
+	public void testBuildDataSetFromStreamWithClasspath() throws Exception {
+		buildDataSetFromStream("classpath:/test-column-sensing-classpath.xml");
+	}
+
+	private void buildDataSetFromStream(String location) throws DataSetException {
 		FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
 		builder.setColumnSensing(true);
-		String location = "test-column-sensing-classpath.xml";
 		IDataSet dataset = ReflectionTestUtils.invokeMethod(this.loader, "buildDataSetFromStream", new Object[]{builder, getClasspathResource(location)});
 		assertDataset(dataset);
 	}

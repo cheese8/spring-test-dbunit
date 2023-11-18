@@ -42,6 +42,11 @@ public class ExpectedQueryWithModifierOnMethodTest {
 	public void test() throws Exception {
 	}
 
+	@Test
+	@ExpectedDatabase(value = "/META-INF/db/expected_query_modified_dollar.xml", query = "select * from SampleEntity where id in (1,2)", table = "SampleEntity", modifiers = DollarModifier.class)
+	public void testDollarModifier() throws Exception {
+	}
+
 	private static class InnerModifier extends ReplacementDataSetModifier {
 
 		@Override
@@ -56,6 +61,15 @@ public class ExpectedQueryWithModifierOnMethodTest {
 		@Override
 		protected void addReplacements(ReplacementDataSet dataSet) {
 			dataSet.addReplacementSubstring("!", "");
+		}
+
+	}
+
+	class DollarModifier extends ReplacementDataSetModifier {
+
+		@Override
+		protected void addReplacements(ReplacementDataSet dataSet) {
+			dataSet.addReplacementSubstring("$", "");
 		}
 
 	}
