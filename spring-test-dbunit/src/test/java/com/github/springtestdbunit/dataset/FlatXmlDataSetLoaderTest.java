@@ -20,11 +20,16 @@ import static org.junit.Assert.*;
 
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.test.context.TestContext;
 
 import com.github.springtestdbunit.testutils.ExtendedTestContextManager;
+import org.springframework.test.util.ReflectionTestUtils;
 
 /**
  * Tests for {@link FlatXmlDataSetLoader}.
@@ -73,4 +78,19 @@ public class FlatXmlDataSetLoaderTest {
 		assertNull(dataset);
 	}
 
+	@Test
+	public void testBuildDataSetFromStream() throws Exception {
+		FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
+		builder.setColumnSensing(true);
+		String location = "test-column-sensing-classpath.xml";
+		IDataSet dataset = ReflectionTestUtils.invokeMethod(this.loader, "buildDataSetFromStream", new Object[]{builder, getClasspathResource(location)});
+		assertDataset(dataset);
+	}
+
+	private Resource getClasspathResource(String location) {
+		ResourceLoader resourceLoader = new DefaultResourceLoader();
+		String classpathLocation = location.startsWith(ResourceLoader.CLASSPATH_URL_PREFIX) ? location :
+				ResourceLoader.CLASSPATH_URL_PREFIX + location;
+		return resourceLoader.getResource(classpathLocation);
+	}
 }
