@@ -151,4 +151,9 @@ public class DatabaseDataSourceConnectionFactoryBeanTest {
 		verify(dataSource).getConnection();
 	}
 
+	@Test(expected = IllegalStateException.class)
+	public void testNewConnectionException() {
+		DatabaseDataSourceConnectionFactoryBean.newConnection(null);
+	}
+
 }
