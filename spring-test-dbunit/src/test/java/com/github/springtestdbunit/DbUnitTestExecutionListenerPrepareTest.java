@@ -84,6 +84,16 @@ public class DbUnitTestExecutionListenerPrepareTest {
 				.getTestContextAttribute(DbUnitTestExecutionListener.DATABASE_OPERATION_LOOKUP_ATTRIBUTE).getClass());
 	}
 
+	@Test(expected = IllegalStateException.class)
+	public void testDatabaseConnectionsGetMissed() throws Exception {
+		addBean("dbUnitDatabaseConnection", this.databaseConnection);
+		ExtendedTestContextManager testContextManager = new ExtendedTestContextManager(NoDbUnitConfiguration.class);
+		testContextManager.prepareTestInstance();
+		DatabaseConnections databaseConnections = (DatabaseConnections) testContextManager
+				.getTestContextAttribute(DbUnitTestExecutionListener.CONNECTION_ATTRIBUTE);
+		databaseConnections.get("dbUnitDatabaseConnection-missed");
+	}
+
 	@Test
 	public void shouldTryBeanFactoryForCommonBeanNamesWithNoDbUnitConfiguration() throws Exception {
 		testCommonBeanNames(NoDbUnitConfiguration.class);
