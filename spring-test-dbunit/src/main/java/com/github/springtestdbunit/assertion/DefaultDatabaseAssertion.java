@@ -32,24 +32,13 @@ import org.dbunit.dataset.filter.IColumnFilter;
  */
 public class DefaultDatabaseAssertion implements DatabaseAssertion {
 
-	public void assertEquals(IDataSet expectedDataSet, IDataSet actualDataSet, List<IColumnFilter> columnFilters)
+	public void assertEquals(IDataSet expectedDataSet, IDataSet actualDataSet, List<IColumnFilter> columnFilters, List<String> ignoreCols)
 			throws DatabaseUnitException {
 		Assertion.assertEquals(expectedDataSet, actualDataSet);
 	}
 
-	public void assertEquals(IDataSet expectedDataSet, IDataSet actualDataSet, String[] ignoreCols)
-			throws DatabaseUnitException {
-		Assertion.assertEquals(expectedDataSet, actualDataSet);
-	}
-
-	public void assertEquals(ITable expectedTable, ITable actualTable, List<IColumnFilter> columnFilters)
+	public void assertEquals(ITable expectedTable, ITable actualTable, List<IColumnFilter> columnFilters, List<String> ignoreCols)
 			throws DatabaseUnitException {
 		Assertion.assertEquals(expectedTable, actualTable);
 	}
-
-	public void assertEquals(ITable expectedTable, ITable actualTable, String[] ignoreCols)
-			throws DatabaseUnitException {
-		Assertion.assertEquals(expectedTable, actualTable);
-	}
-
 }

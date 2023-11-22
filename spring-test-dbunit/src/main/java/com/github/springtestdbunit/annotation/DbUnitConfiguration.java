@@ -25,6 +25,7 @@ import java.lang.annotation.Target;
 
 import javax.sql.DataSource;
 
+import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 
@@ -33,6 +34,7 @@ import com.github.springtestdbunit.dataset.DataSetLoader;
 import com.github.springtestdbunit.dataset.FlatXmlDataSetLoader;
 import com.github.springtestdbunit.operation.DatabaseOperationLookup;
 import com.github.springtestdbunit.operation.DefaultDatabaseOperationLookup;
+import org.dbunit.dataset.filter.IColumnFilter;
 
 /**
  * Annotation that can be used to configure {@link DbUnitTestExecutionListener}.
@@ -75,4 +77,13 @@ public @interface DbUnitConfiguration {
 	 */
 	Class<? extends DatabaseOperationLookup> databaseOperationLookup() default DefaultDatabaseOperationLookup.class;
 
+	/**
+	 * A set of {@link org.dbunit.dataset.filter.IColumnFilter} that will be applied to column comparison when using
+	 * non-strict {@link DatabaseAssertionMode}.
+	 * <p>
+	 * Specify this when you want to use DTD with your expected dataset XML file but want to exclude some columns from
+	 * comparison.
+	 * @return column filters to apply
+	 */
+	Class<? extends IColumnFilter>[] columnFilters() default {};
 }
