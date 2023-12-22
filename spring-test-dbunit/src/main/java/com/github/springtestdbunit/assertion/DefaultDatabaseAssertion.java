@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.dbunit.Assertion;
 import org.dbunit.DatabaseUnitException;
+import org.dbunit.assertion.FailureHandler;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.filter.IColumnFilter;
@@ -32,13 +33,13 @@ import org.dbunit.dataset.filter.IColumnFilter;
  */
 public class DefaultDatabaseAssertion implements DatabaseAssertion {
 
-	public void assertEquals(IDataSet expectedDataSet, IDataSet actualDataSet, List<IColumnFilter> columnFilters, List<String> ignoreCols)
+	public void assertEquals(IDataSet expectedDataSet, IDataSet actualDataSet, List<IColumnFilter> columnFilters, List<String> ignoreCols, FailureHandler failureHandler)
 			throws DatabaseUnitException {
-		Assertion.assertEquals(expectedDataSet, actualDataSet);
+		Assertion.assertEquals(expectedDataSet, actualDataSet, failureHandler);
 	}
 
-	public void assertEquals(ITable expectedTable, ITable actualTable, List<IColumnFilter> columnFilters, List<String> ignoreCols)
+	public void assertEquals(ITable expectedTable, ITable actualTable, List<IColumnFilter> columnFilters, List<String> ignoreCols, FailureHandler failureHandler)
 			throws DatabaseUnitException {
-		Assertion.assertEquals(expectedTable, actualTable);
+		Assertion.assertEquals(expectedTable, actualTable, failureHandler);
 	}
 }
