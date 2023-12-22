@@ -17,12 +17,15 @@
 package com.github.springtestdbunit;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
 import com.github.springtestdbunit.annotation.*;
+import com.github.springtestdbunit.operation.DatabaseOperationLookup;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.dbunit.assertion.FailureHandler;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.Column;
 import org.dbunit.dataset.CompositeDataSet;
@@ -120,6 +123,7 @@ public class DbUnitRunner {
 		String table = annotation.table();
 		IDataSet expectedDataSet = loadDataset(testContext, annotation.value(), modifier);
 		IDatabaseConnection connection = connections.get(annotation.connection());
+		FailureHandler failureHandler = getFailureHandler(testContext);
 		if (expectedDataSet != null) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Verifying @DatabaseTest expectation using " + annotation.value());
@@ -131,16 +135,25 @@ public class DbUnitRunner {
 				Assert.hasLength(table, "The table name must be specified when using a SQL query");
 				ITable expectedTable = expectedDataSet.getTable(table);
 				ITable actualTable = connection.createQueryTable(table, query);
-				assertion.assertEquals(expectedTable, actualTable, columnFilters, ignoredColumns);
+				assertion.assertEquals(expectedTable, actualTable, columnFilters, ignoredColumns, failureHandler);
 			} else if (StringUtils.hasLength(table)) {
 				ITable actualTable = connection.createTable(table);
 				ITable expectedTable = expectedDataSet.getTable(table);
-				assertion.assertEquals(expectedTable, actualTable, columnFilters, ignoredColumns);
+				assertion.assertEquals(expectedTable, actualTable, columnFilters, ignoredColumns, failureHandler);
 			} else {
 				IDataSet actualDataSet = connection.createDataSet();
-				assertion.assertEquals(expectedDataSet, actualDataSet, columnFilters, ignoredColumns);
+				assertion.assertEquals(expectedDataSet, actualDataSet, columnFilters, ignoredColumns, failureHandler);
 			}
 		}
+	}
+
+	private FailureHandler getFailureHandler(DbUnitTestContext testContext) throws Exception {
+		DbUnitConfiguration configuration = testContext.getTestClass().getAnnotation(DbUnitConfiguration.class);
+		if (configuration == null) {
+			return null;
+		}
+		Class<? extends FailureHandler> failureHandlerClass = configuration.failureHandler();
+		return failureHandlerClass.getDeclaredConstructor().newInstance();
 	}
 
 	private DataSetModifier getModifier(DbUnitTestContext testContext, Annotations<ExpectedDatabase> annotations) {

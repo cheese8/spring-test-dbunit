@@ -26,6 +26,8 @@ import java.lang.annotation.Target;
 import javax.sql.DataSource;
 
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
+import org.dbunit.assertion.DefaultFailureHandler;
+import org.dbunit.assertion.FailureHandler;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 
@@ -86,4 +88,6 @@ public @interface DbUnitConfiguration {
 	 * @return column filters to apply
 	 */
 	Class<? extends IColumnFilter>[] columnFilters() default {};
+
+	Class<? extends FailureHandler> failureHandler() default DefaultFailureHandler.class;
 }

@@ -19,6 +19,7 @@ package com.github.springtestdbunit.assertion;
 import java.util.List;
 
 import org.dbunit.DatabaseUnitException;
+import org.dbunit.assertion.FailureHandler;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.filter.IColumnFilter;
@@ -38,7 +39,7 @@ public interface DatabaseAssertion {
 	 * @param columnFilters any column filters to apply
 	 * @throws DatabaseUnitException if the datasets are not equal
 	 */
-	void assertEquals(IDataSet expectedDataSet, IDataSet actualDataSet, List<IColumnFilter> columnFilters, List<String> ignoreCols)
+	void assertEquals(IDataSet expectedDataSet, IDataSet actualDataSet, List<IColumnFilter> columnFilters, List<String> ignoreCols, FailureHandler failureHandler)
 			throws DatabaseUnitException;
 
 	/**
@@ -48,7 +49,7 @@ public interface DatabaseAssertion {
 	 * @param columnFilters any column filters to apply
 	 * @throws DatabaseUnitException if the tables are not equal
 	 */
-	void assertEquals(ITable expectedTable, ITable actualTable, List<IColumnFilter> columnFilters, List<String> ignoreCols)
+	void assertEquals(ITable expectedTable, ITable actualTable, List<IColumnFilter> columnFilters, List<String> ignoreCols, FailureHandler failureHandler)
 			throws DatabaseUnitException;
 
 }
