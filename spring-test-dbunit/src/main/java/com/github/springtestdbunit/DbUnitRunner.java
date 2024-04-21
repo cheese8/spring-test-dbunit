@@ -56,8 +56,7 @@ public class DbUnitRunner {
 	 * @throws Exception
 	 */
 	public void beforeTestMethod(DbUnitTestContext testContext) throws Exception {
-		Annotations<DatabaseSetup> annotations = Annotations.get(testContext, DatabaseSetups.class,
-				DatabaseSetup.class);
+		Annotations<DatabaseSetup> annotations = Annotations.get(testContext, DatabaseSetups.class, DatabaseSetup.class);
 		setupOrTeardown(testContext, true, AnnotationAttributes.get(annotations));
 	}
 
@@ -69,11 +68,9 @@ public class DbUnitRunner {
 	public void afterTestMethod(DbUnitTestContext testContext) throws Exception {
 		try {
 			try {
-				verifyExpected(testContext,
-						Annotations.get(testContext, ExpectedDatabases.class, ExpectedDatabase.class));
+				verifyExpected(testContext, Annotations.get(testContext, ExpectedDatabases.class, ExpectedDatabase.class));
 			} finally {
-				Annotations<DatabaseTearDown> annotations = Annotations.get(testContext, DatabaseTearDowns.class,
-						DatabaseTearDown.class);
+				Annotations<DatabaseTearDown> annotations = Annotations.get(testContext, DatabaseTearDowns.class, DatabaseTearDown.class);
 				try {
 					setupOrTeardown(testContext, false, AnnotationAttributes.get(annotations));
 				} catch (RuntimeException ex) {
@@ -90,12 +87,10 @@ public class DbUnitRunner {
 		}
 	}
 
-	private void verifyExpected(DbUnitTestContext testContext, Annotations<ExpectedDatabase> annotations)
-			throws Exception {
+	private void verifyExpected(DbUnitTestContext testContext, Annotations<ExpectedDatabase> annotations) throws Exception {
 		if (testContext.getTestException() != null) {
 			if (logger.isDebugEnabled()) {
-				logger.debug("Skipping @DatabaseTest expectation due to test exception "
-						+ testContext.getTestException().getClass());
+				logger.debug("Skipping @DatabaseTest expectation due to test exception " + testContext.getTestException().getClass());
 			}
 			return;
 		}
@@ -156,16 +151,24 @@ public class DbUnitRunner {
 	private void setupOrTeardown(DbUnitTestContext testContext, boolean isSetup, Collection<AnnotationAttributes> annotations) throws Exception {
 		DatabaseConnections connections = testContext.getConnections();
 		for (AnnotationAttributes annotation : annotations) {
-			List<IDataSet> datasets = loadDataSets(testContext, annotation);
 			DatabaseOperation operation = annotation.getType();
 			org.dbunit.operation.DatabaseOperation dbUnitOperation = getDbUnitDatabaseOperation(testContext, operation);
+			IDatabaseConnection connection = connections.get(annotation.getConnection());
+			String[] executeScriptBefore = annotation.getExecuteScriptBefore();
+			String[] executeScriptAfter = annotation.getExecuteScriptAfter();
+			List<IDataSet> datasets = loadDataSets(testContext, annotation);
 			if (!datasets.isEmpty()) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Executing " + (isSetup ? "Setup" : "Teardown") + " of @DatabaseTest using "+ operation + " on " + datasets);
 				}
-				IDatabaseConnection connection = connections.get(annotation.getConnection());
 				IDataSet dataSet = new CompositeDataSet(datasets.toArray(new IDataSet[datasets.size()]));
+				if (executeScriptBefore != null && executeScriptBefore.length > 0) {
+					System.out.println(executeScriptBefore);
+				}
 				dbUnitOperation.execute(connection, dataSet);
+				if (executeScriptAfter != null && executeScriptAfter.length > 0) {
+					System.out.println(executeScriptAfter);
+				}
 			}
 		}
 	}
@@ -255,6 +258,9 @@ public class DbUnitRunner {
 
 		private final String connection;
 
+		private final String[] executeScriptBefore;
+		private final String[] executeScriptAfter;
+
 		public AnnotationAttributes(Annotation annotation) {
 			Assert.state((annotation instanceof DatabaseSetup) || (annotation instanceof DatabaseTearDown),
 					"Only DatabaseSetup and DatabaseTearDown annotations are supported");
@@ -262,6 +268,8 @@ public class DbUnitRunner {
 			this.type = (DatabaseOperation) attributes.get("type");
 			this.value = (String[]) attributes.get("value");
 			this.connection = (String) attributes.get("connection");
+			this.executeScriptBefore = (String[]) attributes.get("executeScriptBefore");
+			this.executeScriptAfter = (String[]) attributes.get("executeScriptAfter");
 		}
 
 		public DatabaseOperation getType() {
@@ -270,6 +278,14 @@ public class DbUnitRunner {
 
 		public String[] getValue() {
 			return this.value;
+		}
+
+		public String[] getExecuteScriptBefore() {
+			return this.executeScriptBefore;
+		}
+
+		public String[] getExecuteScriptAfter() {
+			return this.executeScriptAfter;
 		}
 
 		public String getConnection() {

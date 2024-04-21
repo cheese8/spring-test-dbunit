@@ -68,4 +68,8 @@ public @interface DatabaseSetup {
 	 */
 	String[] value() default {};
 
+	String[] scriptExecuteBefore() default {};
+
+	String[] scriptExecuteAfter() default {};
+
 }

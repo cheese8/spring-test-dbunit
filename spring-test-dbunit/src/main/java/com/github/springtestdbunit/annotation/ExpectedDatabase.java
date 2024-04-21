@@ -110,4 +110,8 @@ public @interface ExpectedDatabase {
 	 * @return column filters to apply
 	 */
 	String[] ignoreCols() default {};
+
+	String[] scriptExecuteBefore() default {};
+
+	String[] scriptExecuteAfter() default {};
 }

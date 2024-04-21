@@ -54,7 +54,7 @@ public class NonStrictDatabaseAssertion implements DatabaseAssertion {
 		Set<String> ignoredColumns = getColumnsToIgnore(expectedTable.getTableMetaData(),
 				actualTable.getTableMetaData(), columnFilters, ignoreCols);
 		Assertion.assertEqualsIgnoreCols(expectedTable, actualTable,
-				ignoredColumns.toArray(new String[ignoredColumns.size()]));
+				ignoredColumns.toArray(new String[ignoredColumns.size()]), null);
 	}
 
 	private Set<String> getColumnsToIgnore(ITableMetaData expectedMetaData, ITableMetaData actualMetaData,
