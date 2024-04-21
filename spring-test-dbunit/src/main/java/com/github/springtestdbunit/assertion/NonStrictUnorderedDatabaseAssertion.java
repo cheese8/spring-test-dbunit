@@ -19,6 +19,7 @@ package com.github.springtestdbunit.assertion;
 import java.util.List;
 
 import org.dbunit.DatabaseUnitException;
+import org.dbunit.assertion.FailureHandler;
 import org.dbunit.dataset.Column;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.SortedTable;
@@ -36,11 +37,11 @@ import org.dbunit.dataset.filter.IColumnFilter;
 public class NonStrictUnorderedDatabaseAssertion extends NonStrictDatabaseAssertion {
 
 	@Override
-	public void assertEquals(ITable expectedSortedTable, ITable actualSortedTable, List<IColumnFilter> columnFilters, List<String> ignoreCols)
+	public void assertEquals(ITable expectedSortedTable, ITable actualSortedTable, List<IColumnFilter> columnFilters, List<String> ignoreCols, FailureHandler failureHandler)
 			throws DatabaseUnitException {
 		Column[] expectedColumns = expectedSortedTable.getTableMetaData().getColumns();
 		expectedSortedTable = new SortedTable(expectedSortedTable, expectedColumns);
 		actualSortedTable = new SortedTable(actualSortedTable, expectedColumns);
-		super.assertEquals(expectedSortedTable, actualSortedTable, columnFilters, ignoreCols);
+		super.assertEquals(expectedSortedTable, actualSortedTable, columnFilters, ignoreCols, failureHandler);
 	}
 }

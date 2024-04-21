@@ -25,6 +25,7 @@ public class ReplacementDataSetLoader implements DataSetLoader {
 	private final Map<Object, Object> objectReplacements;
 
 	private final Map<String, String> subStringReplacements;
+
 	private final Map<String, ReplacementFunction> functionReplacements;
 
 	/**

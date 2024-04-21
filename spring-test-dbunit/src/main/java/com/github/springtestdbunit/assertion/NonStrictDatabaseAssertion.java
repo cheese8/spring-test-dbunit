@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.dbunit.Assertion;
 import org.dbunit.DatabaseUnitException;
+import org.dbunit.assertion.FailureHandler;
 import org.dbunit.dataset.Column;
 import org.dbunit.dataset.Columns;
 import org.dbunit.dataset.DataSetException;
@@ -40,21 +41,21 @@ import org.dbunit.dataset.filter.IColumnFilter;
  */
 public class NonStrictDatabaseAssertion implements DatabaseAssertion {
 
-	public void assertEquals(IDataSet expectedDataSet, IDataSet actualDataSet, List<IColumnFilter> columnFilters, List<String> ignoreCols)
+	public void assertEquals(IDataSet expectedDataSet, IDataSet actualDataSet, List<IColumnFilter> columnFilters, List<String> ignoreCols, FailureHandler failureHandler)
 			throws DatabaseUnitException {
 		for (String tableName : expectedDataSet.getTableNames()) {
 			ITable expectedTable = expectedDataSet.getTable(tableName);
 			ITable actualTable = actualDataSet.getTable(tableName);
-			assertEquals(expectedTable, actualTable, columnFilters, ignoreCols);
+			assertEquals(expectedTable, actualTable, columnFilters, ignoreCols, failureHandler);
 		}
 	}
 
-	public void assertEquals(ITable expectedTable, ITable actualTable, List<IColumnFilter> columnFilters, List<String> ignoreCols)
+	public void assertEquals(ITable expectedTable, ITable actualTable, List<IColumnFilter> columnFilters, List<String> ignoreCols, FailureHandler failureHandler)
 			throws DatabaseUnitException {
 		Set<String> ignoredColumns = getColumnsToIgnore(expectedTable.getTableMetaData(),
 				actualTable.getTableMetaData(), columnFilters, ignoreCols);
 		Assertion.assertEqualsIgnoreCols(expectedTable, actualTable,
-				ignoredColumns.toArray(new String[ignoredColumns.size()]), null);
+				ignoredColumns.toArray(new String[ignoredColumns.size()]), failureHandler);
 	}
 
 	private Set<String> getColumnsToIgnore(ITableMetaData expectedMetaData, ITableMetaData actualMetaData,
