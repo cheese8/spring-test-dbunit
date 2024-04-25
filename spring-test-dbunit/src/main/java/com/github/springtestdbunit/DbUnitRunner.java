@@ -17,22 +17,22 @@
 package com.github.springtestdbunit;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
 import com.github.springtestdbunit.annotation.*;
-import com.github.springtestdbunit.operation.DatabaseOperationLookup;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dbunit.assertion.FailureHandler;
 import org.dbunit.database.IDatabaseConnection;
-import org.dbunit.dataset.Column;
-import org.dbunit.dataset.CompositeDataSet;
-import org.dbunit.dataset.IDataSet;
-import org.dbunit.dataset.ITable;
+import org.dbunit.dataset.*;
 import org.dbunit.dataset.filter.IColumnFilter;
+import org.dbunit.operation.ExecuteSqlOperation;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.core.io.ClassRelativeResourceLoader;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -167,23 +167,47 @@ public class DbUnitRunner {
 			DatabaseOperation operation = annotation.getType();
 			org.dbunit.operation.DatabaseOperation dbUnitOperation = getDbUnitDatabaseOperation(testContext, operation);
 			IDatabaseConnection connection = connections.get(annotation.getConnection());
-			String[] executeScriptBefore = annotation.getExecuteScriptBefore();
-			String[] executeScriptAfter = annotation.getExecuteScriptAfter();
+			if (dbUnitOperation instanceof ExecuteSqlOperation) {
+				for (String each : annotation.getValue()) {
+					Resource resource = getClassRelativeResource(testContext.getTestClass().getClass(), each);
+					if (resource.exists()) {
+						dbUnitOperation.execute(connection, resource.getFile());
+						continue;
+					}
+					resource = getClasspathResource(each);
+					if (resource.exists()) {
+						dbUnitOperation.execute(connection, resource.getFile());
+						continue;
+					}
+					dbUnitOperation.execute(connection, each);
+				}
+				continue;
+			}
 			List<IDataSet> datasets = loadDataSets(testContext, annotation);
 			if (!datasets.isEmpty()) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Executing " + (isSetup ? "Setup" : "Teardown") + " of @DatabaseTest using "+ operation + " on " + datasets);
 				}
 				IDataSet dataSet = new CompositeDataSet(datasets.toArray(new IDataSet[datasets.size()]));
-				if (executeScriptBefore != null && executeScriptBefore.length > 0) {
-					System.out.println(executeScriptBefore);
-				}
 				dbUnitOperation.execute(connection, dataSet);
-				if (executeScriptAfter != null && executeScriptAfter.length > 0) {
-					System.out.println(executeScriptAfter);
-				}
 			}
 		}
+	}
+
+	private Resource getClassRelativeResource(Class<?> testClass, String location) {
+		ResourceLoader resourceLoader = getResourceLoader(testClass);
+		return resourceLoader.getResource(location);
+	}
+
+	private ResourceLoader getResourceLoader(Class<?> testClass) {
+		return new ClassRelativeResourceLoader(testClass);
+	}
+
+	private Resource getClasspathResource(String location) {
+		ResourceLoader resourceLoader = new DefaultResourceLoader();
+		String classpathLocation = location.startsWith(ResourceLoader.CLASSPATH_URL_PREFIX) ? location :
+				ResourceLoader.CLASSPATH_URL_PREFIX + location;
+		return resourceLoader.getResource(classpathLocation);
 	}
 
 	private List<IDataSet> loadDataSets(DbUnitTestContext testContext, AnnotationAttributes annotation)
@@ -271,9 +295,6 @@ public class DbUnitRunner {
 
 		private final String connection;
 
-		private final String[] executeScriptBefore;
-		private final String[] executeScriptAfter;
-
 		public AnnotationAttributes(Annotation annotation) {
 			Assert.state((annotation instanceof DatabaseSetup) || (annotation instanceof DatabaseTearDown),
 					"Only DatabaseSetup and DatabaseTearDown annotations are supported");
@@ -281,8 +302,6 @@ public class DbUnitRunner {
 			this.type = (DatabaseOperation) attributes.get("type");
 			this.value = (String[]) attributes.get("value");
 			this.connection = (String) attributes.get("connection");
-			this.executeScriptBefore = (String[]) attributes.get("executeScriptBefore");
-			this.executeScriptAfter = (String[]) attributes.get("executeScriptAfter");
 		}
 
 		public DatabaseOperation getType() {
@@ -291,14 +310,6 @@ public class DbUnitRunner {
 
 		public String[] getValue() {
 			return this.value;
-		}
-
-		public String[] getExecuteScriptBefore() {
-			return this.executeScriptBefore;
-		}
-
-		public String[] getExecuteScriptAfter() {
-			return this.executeScriptAfter;
 		}
 
 		public String getConnection() {
