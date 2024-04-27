@@ -35,10 +35,29 @@ public class PersonServiceTest {
 	}
 
 	@Test
+	@DatabaseSetup(type = DatabaseOperation.SQL, value = {"select * from person", "select id from person"})
+	@DatabaseSetup("sampleData.xml")
+	public void testFind_0() {
+		List<Person> personList = this.personService.find("hil");
+		assertEquals(1, personList.size());
+		assertEquals("Phillip", personList.get(0).getFirstName());
+	}
+
+	@Test
 	//@DatabaseSetup(type = DatabaseOperation.SQL, value = {"select * from person", "select id from person"})
 	@DatabaseSetup(type = DatabaseOperation.SQL, value = {"testFind_1.sql"})
 	@DatabaseSetup("sampleData.xml")
 	public void testFind_1() {
+		List<Person> personList = this.personService.find("hil");
+		assertEquals(1, personList.size());
+		assertEquals("Phillip", personList.get(0).getFirstName());
+	}
+
+	@Test
+	//@DatabaseSetup(type = DatabaseOperation.SQL, value = {"select * from person", "select id from person"})
+	@DatabaseSetup(type = DatabaseOperation.SQL, value = {"testFind_2.sql"})
+	@DatabaseSetup("sampleData.xml")
+	public void testFind_2() {
 		List<Person> personList = this.personService.find("hil");
 		assertEquals(1, personList.size());
 		assertEquals("Phillip", personList.get(0).getFirstName());
