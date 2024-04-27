@@ -39,6 +39,7 @@ public class DefaultDatabaseOperationLookup implements DatabaseOperationLookup {
 		OPERATION_LOOKUP.put(DatabaseOperation.DELETE_ALL, org.dbunit.operation.DatabaseOperation.DELETE_ALL);
 		OPERATION_LOOKUP.put(DatabaseOperation.TRUNCATE_TABLE, org.dbunit.operation.DatabaseOperation.TRUNCATE_TABLE);
 		OPERATION_LOOKUP.put(DatabaseOperation.CLEAN_INSERT, org.dbunit.operation.DatabaseOperation.CLEAN_INSERT);
+		OPERATION_LOOKUP.put(DatabaseOperation.SQL, org.dbunit.operation.DatabaseOperation.SQL);
 	}
 
 	public org.dbunit.operation.DatabaseOperation get(DatabaseOperation operation) {

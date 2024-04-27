@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
+import com.github.springtestdbunit.annotation.DatabaseOperation;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,17 @@ public class PersonServiceTest {
 		assertEquals(1, personList.size());
 		assertEquals("Phillip", personList.get(0).getFirstName());
 	}
+
+	@Test
+	//@DatabaseSetup(type = DatabaseOperation.SQL, value = {"select * from person", "select id from person"})
+	@DatabaseSetup(type = DatabaseOperation.SQL, value = {"testFind_1.sql"})
+	@DatabaseSetup("sampleData.xml")
+	public void testFind_1() {
+		List<Person> personList = this.personService.find("hil");
+		assertEquals(1, personList.size());
+		assertEquals("Phillip", personList.get(0).getFirstName());
+	}
+
 
 	@Test
 	@DatabaseSetup("sampleData.xml")

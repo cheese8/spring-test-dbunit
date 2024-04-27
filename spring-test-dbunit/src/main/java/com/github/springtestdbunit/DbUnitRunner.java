@@ -169,7 +169,7 @@ public class DbUnitRunner {
 			IDatabaseConnection connection = connections.get(annotation.getConnection());
 			if (dbUnitOperation instanceof ExecuteSqlOperation) {
 				for (String each : annotation.getValue()) {
-					Resource resource = getClassRelativeResource(testContext.getTestClass().getClass(), each);
+					Resource resource = getClassRelativeResource(testContext.getTestClass(), each);
 					if (resource.exists()) {
 						dbUnitOperation.execute(connection, resource.getFile());
 						continue;

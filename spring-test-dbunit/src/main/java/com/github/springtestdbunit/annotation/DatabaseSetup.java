@@ -67,9 +67,4 @@ public @interface DatabaseSetup {
 	 * @see DbUnitConfiguration#dataSetLoader()
 	 */
 	String[] value() default {};
-
-	String[] scriptExecuteBefore() default {};
-
-	String[] scriptExecuteAfter() default {};
-
 }
