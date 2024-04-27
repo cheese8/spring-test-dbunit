@@ -16,7 +16,10 @@
 
 package com.github.springtestdbunit.dataset;
 
+import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
+
+import java.io.IOException;
 
 /**
  * Strategy interface for {@link #loadDataSet loading} a {@link IDataSet dataset}.

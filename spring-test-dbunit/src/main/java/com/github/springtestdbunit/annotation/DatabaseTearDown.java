@@ -25,6 +25,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
+import com.github.springtestdbunit.dataset.DataSetLoader;
+import org.dbunit.dataset.IDataSet;
 
 /**
  * Test annotation which indicates how to put a database into a know state after tests have run. This annotation can be
@@ -64,5 +66,29 @@ public @interface DatabaseTearDown {
 	 * @see DbUnitConfiguration#dataSetLoader()
 	 */
 	String[] value() default {};
+
+	/**
+	 * Returns the class that will be used to load {@link IDataSet} resources. The specified class must implement
+	 * {@link DataSetLoader} and must have a default constructor. If not provided, the one defined on the
+	 * {@link DbUnitConfiguration} will be used instead.
+	 *
+	 * Leave blank to use the default dataset loader. If both the {@code dataSetLoader} and {@code dataSetLoaderBean}
+	 * are defined, the latter will be used.
+	 *
+	 * @return The data set loader class.
+	 */
+	Class<? extends DataSetLoader> dataSetLoader() default DataSetLoader.class;
+
+	/**
+	 * Returns the name of the bean that will be used to load {@link IDataSet} resources. The specified bean must
+	 * implement {@link DataSetLoader}. If not provided, the one defined on the {@link DbUnitConfiguration} will be used
+	 * instead.
+	 *
+	 * Leave blank to use the default dataset loader. If both the {@code dataSetLoader} and {@code dataSetLoaderBean}
+	 * are defined, the latter will be used.
+	 *
+	 * @return The data set loader bean name.
+	 */
+	String dataSetLoaderBean() default "";
 
 }

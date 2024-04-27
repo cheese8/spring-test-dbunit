@@ -16,8 +16,7 @@
 
 package com.github.springtestdbunit;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
+import java.io.IOException;
 import java.util.*;
 
 import com.github.springtestdbunit.annotation.*;
@@ -28,7 +27,6 @@ import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.*;
 import org.dbunit.dataset.filter.IColumnFilter;
 import org.dbunit.operation.ExecuteSqlOperation;
-import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.io.ClassRelativeResourceLoader;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
@@ -60,7 +58,7 @@ public class DbUnitRunner {
 	 */
 	public void beforeTestMethod(DbUnitTestContext testContext) throws Exception {
 		Annotations<DatabaseSetup> annotations = Annotations.get(testContext, DatabaseSetups.class, DatabaseSetup.class);
-		setupOrTeardown(testContext, true, AnnotationAttributes.get(annotations));
+		setupOrTeardown(testContext, true, DatabaseSetupTearDownAnnotationAttributes.get(annotations));
 	}
 
 	/**
@@ -75,7 +73,7 @@ public class DbUnitRunner {
 			} finally {
 				Annotations<DatabaseTearDown> annotations = Annotations.get(testContext, DatabaseTearDowns.class, DatabaseTearDown.class);
 				try {
-					setupOrTeardown(testContext, false, AnnotationAttributes.get(annotations));
+					setupOrTeardown(testContext, false, DatabaseSetupTearDownAnnotationAttributes.get(annotations));
 				} catch (RuntimeException ex) {
 					if (testContext.getTestException() == null) {
 						throw ex;
@@ -116,7 +114,9 @@ public class DbUnitRunner {
 					throws Exception {
 		String query = annotation.query();
 		String table = annotation.table();
-		IDataSet expectedDataSet = loadDataset(testContext, annotation.value(), modifier);
+		//IDataSet expectedDataSet = loadDataset(testContext, annotation.value(), modifier);
+		IDataSet expectedDataSet = loadDataset(testContext, new ExpectedDatabaseAnnotationAttributes(annotation),
+				annotation.value(), modifier);
 		IDatabaseConnection connection = connections.get(annotation.connection());
 		FailureHandler failureHandler = getFailureHandler(testContext);
 		if (expectedDataSet != null) {
@@ -161,9 +161,10 @@ public class DbUnitRunner {
 		return modifiers;
 	}
 
-	private void setupOrTeardown(DbUnitTestContext testContext, boolean isSetup, Collection<AnnotationAttributes> annotations) throws Exception {
+	private void setupOrTeardown(DbUnitTestContext testContext, boolean isSetup, Collection<DatabaseSetupTearDownAnnotationAttributes> annotations)
+			throws Exception {
 		DatabaseConnections connections = testContext.getConnections();
-		for (AnnotationAttributes annotation : annotations) {
+		for (DatabaseSetupTearDownAnnotationAttributes annotation : annotations) {
 			DatabaseOperation operation = annotation.getType();
 			org.dbunit.operation.DatabaseOperation dbUnitOperation = getDbUnitDatabaseOperation(testContext, operation);
 			IDatabaseConnection connection = connections.get(annotation.getConnection());
@@ -210,11 +211,14 @@ public class DbUnitRunner {
 		return resourceLoader.getResource(classpathLocation);
 	}
 
-	private List<IDataSet> loadDataSets(DbUnitTestContext testContext, AnnotationAttributes annotation)
-			throws Exception {
+	//private List<IDataSet> loadDataSets(DbUnitTestContext testContext, AnnotationAttributes annotation)
+	//		throws Exception {
+	private List<IDataSet> loadDataSets(DbUnitTestContext testContext,
+				DatabaseSetupTearDownAnnotationAttributes annotation) throws Exception {
 		List<IDataSet> datasets = new ArrayList<>();
 		for (String dataSetLocation : annotation.getValue()) {
-			datasets.add(loadDataset(testContext, dataSetLocation, DataSetModifier.NONE));
+			//datasets.add(loadDataset(testContext, dataSetLocation, DataSetModifier.NONE));
+			datasets.add(loadDataset(testContext, annotation, dataSetLocation, DataSetModifier.NONE));
 		}
 		if (datasets.isEmpty()) {
 			datasets.add(getFullDatabaseDataSet(testContext, annotation.getConnection()));
@@ -227,9 +231,24 @@ public class DbUnitRunner {
 		return connection.createDataSet();
 	}
 
-	private IDataSet loadDataset(DbUnitTestContext testContext, String dataSetLocation, DataSetModifier modifier)
-			throws Exception {
-		DataSetLoader dataSetLoader = testContext.getDataSetLoader();
+	//private IDataSet loadDataset(DbUnitTestContext testContext, String dataSetLocation, DataSetModifier modifier)
+	//		throws Exception {
+		/**
+		 * Loads a dataset using the configuration defined in the test annotation and the global test context.
+		 *
+		 * @param testContext The test context.
+		 * @param annotation The annotation which is currently being processed for the test.
+		 * @param dataSetLocation The location of the dataset.
+		 * @param modifier The dataset modifier.
+		 * @return The loaded dataset.
+		 * @throws DataSetException An exception thrown if the dataset itself has a problem.
+		 * @throws IOException An exception thrown if the dataset could not be loaded.
+		 */
+		private IDataSet loadDataset(final DbUnitTestContext testContext,
+		final AbstractDatabaseAnnotationAttributes annotation, final String dataSetLocation,
+		final DataSetModifier modifier) throws Exception {
+			DataSetLoader dataSetLoader = DataSetAnnotationUtils.getDataSetLoader(testContext, annotation);
+		//DataSetLoader dataSetLoader = testContext.getDataSetLoader();
 		if (StringUtils.hasLength(dataSetLocation)) {
 			IDataSet dataSet = dataSetLoader.loadDataSet(testContext.getTestClass(), dataSetLocation);
 			dataSet = modifier.modify(dataSet);
@@ -286,110 +305,4 @@ public class DbUnitRunner {
 		Assert.state(databaseOperation != null, "The database operation " + operation + " is not supported");
 		return databaseOperation;
 	}
-
-	private static class AnnotationAttributes {
-
-		private final DatabaseOperation type;
-
-		private final String[] value;
-
-		private final String connection;
-
-		public AnnotationAttributes(Annotation annotation) {
-			Assert.state((annotation instanceof DatabaseSetup) || (annotation instanceof DatabaseTearDown),
-					"Only DatabaseSetup and DatabaseTearDown annotations are supported");
-			Map<String, Object> attributes = AnnotationUtils.getAnnotationAttributes(annotation);
-			this.type = (DatabaseOperation) attributes.get("type");
-			this.value = (String[]) attributes.get("value");
-			this.connection = (String) attributes.get("connection");
-		}
-
-		public DatabaseOperation getType() {
-			return this.type;
-		}
-
-		public String[] getValue() {
-			return this.value;
-		}
-
-		public String getConnection() {
-			return this.connection;
-		}
-
-		public static <T extends Annotation> Collection<AnnotationAttributes> get(Annotations<T> annotations) {
-			List<AnnotationAttributes> annotationAttributes = new ArrayList<>();
-			for (T annotation : annotations) {
-				annotationAttributes.add(new AnnotationAttributes(annotation));
-			}
-			return annotationAttributes;
-		}
-
-	}
-
-	private static class Annotations<T extends Annotation> implements Iterable<T> {
-
-		private final List<T> classAnnotations;
-
-		private final List<T> methodAnnotations;
-
-		private final List<T> allAnnotations;
-
-		public Annotations(DbUnitTestContext context, Class<? extends Annotation> container, Class<T> annotation) {
-			this.classAnnotations = getClassAnnotations(context.getTestClass(), container, annotation);
-			this.methodAnnotations = getMethodAnnotations(context.getTestMethod(), container, annotation);
-			List<T> allAnnotations = new ArrayList<>(this.classAnnotations.size() + this.methodAnnotations.size());
-			allAnnotations.addAll(this.classAnnotations);
-			allAnnotations.addAll(this.methodAnnotations);
-			this.allAnnotations = Collections.unmodifiableList(allAnnotations);
-		}
-
-		private List<T> getClassAnnotations(Class<?> element, Class<? extends Annotation> container,
-											Class<T> annotation) {
-			List<T> annotations = new ArrayList<>();
-			addAnnotationToList(annotations, AnnotationUtils.findAnnotation(element, annotation));
-			addRepeatableAnnotationsToList(annotations, AnnotationUtils.findAnnotation(element, container));
-			return Collections.unmodifiableList(annotations);
-		}
-
-		private List<T> getMethodAnnotations(Method element, Class<? extends Annotation> container,
-											 Class<T> annotation) {
-			List<T> annotations = new ArrayList<>();
-			addAnnotationToList(annotations, AnnotationUtils.findAnnotation(element, annotation));
-			addRepeatableAnnotationsToList(annotations, AnnotationUtils.findAnnotation(element, container));
-			return Collections.unmodifiableList(annotations);
-		}
-
-		private void addAnnotationToList(List<T> annotations, T annotation) {
-			if (annotation != null) {
-				annotations.add(annotation);
-			}
-		}
-
-		@SuppressWarnings("unchecked")
-		private void addRepeatableAnnotationsToList(List<T> annotations, Annotation container) {
-			if (container != null) {
-				T[] value = (T[]) AnnotationUtils.getValue(container);
-				annotations.addAll(Arrays.asList(value));
-			}
-		}
-
-		public List<T> getClassAnnotations() {
-			return this.classAnnotations;
-		}
-
-		public List<T> getMethodAnnotations() {
-			return this.methodAnnotations;
-		}
-
-		public Iterator<T> iterator() {
-			return this.allAnnotations.iterator();
-		}
-
-		private static <T extends Annotation> Annotations<T> get(DbUnitTestContext testContext,
-				Class<? extends Annotation> container, Class<T> annotation) {
-			return new Annotations<>(testContext, container, annotation);
-		}
-
-	}
-
 }

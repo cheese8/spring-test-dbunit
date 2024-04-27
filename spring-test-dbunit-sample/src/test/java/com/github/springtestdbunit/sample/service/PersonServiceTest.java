@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.List;
 
 import com.github.springtestdbunit.annotation.DatabaseOperation;
+import com.github.springtestdbunit.dataset.XlsDataSetLoader;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +18,19 @@ import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.sample.entity.Person;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
+@EnableTransactionManagement
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class, DbUnitTestExecutionListener.class })
 public class PersonServiceTest {
 
 	@Autowired
 	private PersonService personService;
+
+	@Autowired
+	private BankcardService bankcardService;
 
 	@Test
 	@DatabaseSetup("sampleData.xml")
@@ -69,6 +75,14 @@ public class PersonServiceTest {
 	@ExpectedDatabase("expectedData.xml")
 	public void testRemove() {
 		this.personService.remove(1);
+	}
+
+	@Test
+	@DatabaseSetup(value = "sampleData.xlsx", dataSetLoader = XlsDataSetLoader.class)
+	@DatabaseSetup(value = "expectedData.xlsx", dataSetLoader = XlsDataSetLoader.class)
+	public void testRemoveWithClass() throws Exception {
+		personService.remove(1);
+		bankcardService.remove(1);
 	}
 
 }

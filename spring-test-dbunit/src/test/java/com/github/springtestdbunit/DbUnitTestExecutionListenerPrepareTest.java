@@ -22,6 +22,7 @@ import static org.mockito.Mockito.*;
 
 import javax.sql.DataSource;
 
+import com.github.springtestdbunit.annotation.DbUnitTestContextConstants;
 import org.dbunit.database.DatabaseDataSourceConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
@@ -76,12 +77,12 @@ public class DbUnitTestExecutionListenerPrepareTest {
 		ExtendedTestContextManager testContextManager = new ExtendedTestContextManager(NoDbUnitConfiguration.class);
 		testContextManager.prepareTestInstance();
 		DatabaseConnections databaseConnections = (DatabaseConnections) testContextManager
-				.getTestContextAttribute(DbUnitTestExecutionListener.CONNECTION_ATTRIBUTE);
+				.getTestContextAttribute(DbUnitTestContextConstants.CONNECTION_ATTRIBUTE);
 		assertSame(this.databaseConnection, databaseConnections.get("dbUnitDatabaseConnection"));
 		assertEquals(FlatXmlDataSetLoader.class, testContextManager
-				.getTestContextAttribute(DbUnitTestExecutionListener.DATA_SET_LOADER_ATTRIBUTE).getClass());
+				.getTestContextAttribute(DbUnitTestContextConstants.DATA_SET_LOADER_ATTRIBUTE).getClass());
 		assertEquals(DefaultDatabaseOperationLookup.class, testContextManager
-				.getTestContextAttribute(DbUnitTestExecutionListener.DATABASE_OPERATION_LOOKUP_ATTRIBUTE).getClass());
+				.getTestContextAttribute(DbUnitTestContextConstants.DATABASE_OPERATION_LOOKUP_ATTRIBUTE).getClass());
 	}
 
 	@Test(expected = IllegalStateException.class)
@@ -90,7 +91,7 @@ public class DbUnitTestExecutionListenerPrepareTest {
 		ExtendedTestContextManager testContextManager = new ExtendedTestContextManager(NoDbUnitConfiguration.class);
 		testContextManager.prepareTestInstance();
 		DatabaseConnections databaseConnections = (DatabaseConnections) testContextManager
-				.getTestContextAttribute(DbUnitTestExecutionListener.CONNECTION_ATTRIBUTE);
+				.getTestContextAttribute(DbUnitTestContextConstants.CONNECTION_ATTRIBUTE);
 		databaseConnections.get("dbUnitDatabaseConnection-missed");
 	}
 
@@ -121,7 +122,7 @@ public class DbUnitTestExecutionListenerPrepareTest {
 		ExtendedTestContextManager testContextManager = new ExtendedTestContextManager(NoDbUnitConfiguration.class);
 		testContextManager.prepareTestInstance();
 		DatabaseConnections databaseConnections = (DatabaseConnections) testContextManager
-				.getTestContextAttribute(DbUnitTestExecutionListener.CONNECTION_ATTRIBUTE);
+				.getTestContextAttribute(DbUnitTestContextConstants.CONNECTION_ATTRIBUTE);
 		Object connection = databaseConnections.get("dataSource");
 		assertEquals(DatabaseDataSourceConnection.class, connection.getClass());
 	}
@@ -155,12 +156,12 @@ public class DbUnitTestExecutionListenerPrepareTest {
 		testContextManager.prepareTestInstance();
 		verify(this.applicationContext).getBean("customBean");
 		DatabaseConnections databaseConnections = (DatabaseConnections) testContextManager
-				.getTestContextAttribute(DbUnitTestExecutionListener.CONNECTION_ATTRIBUTE);
+				.getTestContextAttribute(DbUnitTestContextConstants.CONNECTION_ATTRIBUTE);
 		assertSame(this.databaseConnection, databaseConnections.get("customBean"));
 		assertEquals(CustomDataSetLoader.class, testContextManager
-				.getTestContextAttribute(DbUnitTestExecutionListener.DATA_SET_LOADER_ATTRIBUTE).getClass());
+				.getTestContextAttribute(DbUnitTestContextConstants.DATA_SET_LOADER_ATTRIBUTE).getClass());
 		assertEquals(CustomDatabaseOperationLookup.class, testContextManager
-				.getTestContextAttribute(DbUnitTestExecutionListener.DATABASE_OPERATION_LOOKUP_ATTRIBUTE).getClass());
+				.getTestContextAttribute(DbUnitTestContextConstants.DATABASE_OPERATION_LOOKUP_ATTRIBUTE).getClass());
 	}
 
 	@Test
@@ -183,7 +184,7 @@ public class DbUnitTestExecutionListenerPrepareTest {
 		ExtendedTestContextManager testContextManager = new ExtendedTestContextManager(EmptyDbUnitConfiguration.class);
 		testContextManager.prepareTestInstance();
 		assertEquals(CustomDataSetLoader.class, testContextManager
-				.getTestContextAttribute(DbUnitTestExecutionListener.DATA_SET_LOADER_ATTRIBUTE).getClass());
+				.getTestContextAttribute(DbUnitTestContextConstants.DATA_SET_LOADER_ATTRIBUTE).getClass());
 	}
 
 	private static class LocalApplicationContextLoader implements ContextLoader {
