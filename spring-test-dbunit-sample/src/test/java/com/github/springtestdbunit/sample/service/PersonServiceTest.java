@@ -85,4 +85,20 @@ public class PersonServiceTest {
 		bankcardService.remove(1);
 	}
 
+	@Test
+	@DatabaseSetup(value = "sampleData.xlsx", dataSetLoader = XlsDataSetLoader.class)
+	@ExpectedDatabase(value = "expectedData.xlsx", dataSetLoader = XlsDataSetLoader.class)
+	public void testRemove_2() throws Exception {
+		personService.remove(1);
+		bankcardService.remove(1);
+	}
+
+	@Test
+	@DatabaseSetup(value = "sampleData1.xlsx", dataSetLoader = XlsDataSetLoader.class)
+	@ExpectedDatabase(value = "expectedData1.xlsx", dataSetLoader = XlsDataSetLoader.class)
+	public void testRemove_1() throws Exception {
+		personService.remove(1);
+		bankcardService.remove(1);
+	}
+
 }
