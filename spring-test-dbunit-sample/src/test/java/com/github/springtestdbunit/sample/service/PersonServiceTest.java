@@ -79,7 +79,8 @@ public class PersonServiceTest {
 
 	@Test
 	@DatabaseSetup(value = "sampleData.xlsx", dataSetLoader = XlsDataSetLoader.class)
-	@ExpectedDatabase(value = "expectedData.xlsx", dataSetLoader = XlsDataSetLoader.class)
+	@ExpectedDatabase(value = "expectedData.xlsx", dataSetLoader = XlsDataSetLoader.class, table = "person")
+	@ExpectedDatabase(value = "expectedData.xlsx", dataSetLoader = XlsDataSetLoader.class, table = "bankcard")
 	public void testRemoveWithClass() throws Exception {
 		personService.remove(1);
 		bankcardService.remove(1);
@@ -87,7 +88,8 @@ public class PersonServiceTest {
 
 	@Test
 	@DatabaseSetup(value = "sampleData.xlsx", dataSetLoader = XlsDataSetLoader.class)
-	@ExpectedDatabase(value = "expectedData.xlsx", dataSetLoader = XlsDataSetLoader.class)
+	@ExpectedDatabase(value = "expectedData.xlsx", dataSetLoader = XlsDataSetLoader.class, table = "person")
+	@ExpectedDatabase(value = "expectedData.xlsx", dataSetLoader = XlsDataSetLoader.class, table = "bankcard")
 	public void testRemove_2() throws Exception {
 		personService.remove(1);
 		bankcardService.remove(1);
@@ -95,7 +97,8 @@ public class PersonServiceTest {
 
 	@Test
 	@DatabaseSetup(value = "sampleData1.xlsx", dataSetLoader = XlsDataSetLoader.class)
-	@ExpectedDatabase(value = "expectedData1.xlsx", dataSetLoader = XlsDataSetLoader.class)
+	@ExpectedDatabase(value = "expectedData1.xlsx", dataSetLoader = XlsDataSetLoader.class, table = "person")
+	@ExpectedDatabase(value = "expectedData1.xlsx", dataSetLoader = XlsDataSetLoader.class, table = "bankcard")
 	public void testRemove_1() throws Exception {
 		personService.remove(1);
 		bankcardService.remove(1);
