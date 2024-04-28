@@ -5,7 +5,9 @@ import static org.junit.Assert.assertEquals;
 import java.util.List;
 
 import com.github.springtestdbunit.annotation.DatabaseOperation;
+import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 import com.github.springtestdbunit.dataset.XlsDataSetLoader;
+import org.dbunit.assertion.DiffCollectingFailureHandler;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import com.github.springtestdbunit.sample.entity.Person;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @RunWith(SpringJUnit4ClassRunner.class)
+@DbUnitConfiguration(failureHandler = DiffCollectingFailureHandler.class)
 @ContextConfiguration
 @EnableTransactionManagement
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class, DbUnitTestExecutionListener.class })
@@ -99,6 +102,14 @@ public class PersonServiceTest {
 	@DatabaseSetup(value = "sampleData1.xlsx", dataSetLoader = XlsDataSetLoader.class)
 	@ExpectedDatabase(value = "expectedData1.xlsx", dataSetLoader = XlsDataSetLoader.class, table = "person,bankcard")
 	public void testRemove_1() throws Exception {
+		personService.remove(1);
+		bankcardService.remove(1);
+	}
+
+	@Test
+	@DatabaseSetup(value = "sampleData3.xlsx", dataSetLoader = XlsDataSetLoader.class)
+	@ExpectedDatabase(value = "expectedData3.xlsx", dataSetLoader = XlsDataSetLoader.class, table = "person,bankcard")
+	public void testRemove_3() throws Exception {
 		personService.remove(1);
 		bankcardService.remove(1);
 	}
