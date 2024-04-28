@@ -132,9 +132,12 @@ public class DbUnitRunner {
 				ITable actualTable = connection.createQueryTable(table, query);
 				assertion.assertEquals(expectedTable, actualTable, columnFilters, ignoredColumns, failureHandler);
 			} else if (StringUtils.hasLength(table)) {
-				ITable actualTable = connection.createTable(table);
-				ITable expectedTable = expectedDataSet.getTable(table);
-				assertion.assertEquals(expectedTable, actualTable, columnFilters, ignoredColumns, failureHandler);
+				String[] tableArray = table.split(",", -1);
+				for (String each : tableArray) {
+					ITable actualTable = connection.createTable(each);
+					ITable expectedTable = expectedDataSet.getTable(each);
+					assertion.assertEquals(expectedTable, actualTable, columnFilters, ignoredColumns, failureHandler);
+				}
 			} else {
 				IDataSet actualDataSet = connection.createDataSet();
 				assertion.assertEquals(expectedDataSet, actualDataSet, columnFilters, ignoredColumns, failureHandler);

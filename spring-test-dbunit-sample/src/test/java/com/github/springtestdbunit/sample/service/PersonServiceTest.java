@@ -97,8 +97,7 @@ public class PersonServiceTest {
 
 	@Test
 	@DatabaseSetup(value = "sampleData1.xlsx", dataSetLoader = XlsDataSetLoader.class)
-	@ExpectedDatabase(value = "expectedData1.xlsx", dataSetLoader = XlsDataSetLoader.class, table = "person")
-	@ExpectedDatabase(value = "expectedData1.xlsx", dataSetLoader = XlsDataSetLoader.class, table = "bankcard")
+	@ExpectedDatabase(value = "expectedData1.xlsx", dataSetLoader = XlsDataSetLoader.class, table = "person,bankcard")
 	public void testRemove_1() throws Exception {
 		personService.remove(1);
 		bankcardService.remove(1);
