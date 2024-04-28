@@ -72,7 +72,7 @@ public class PersonServiceTest {
 
 	@Test
 	@DatabaseSetup("sampleData.xml")
-	@ExpectedDatabase("expectedData.xml")
+	@ExpectedDatabase(value = "expectedData.xml", table = "person")
 	public void testRemove() {
 		this.personService.remove(1);
 	}
