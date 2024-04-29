@@ -23,7 +23,7 @@ import com.github.springtestdbunit.sample.entity.Person;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-//@DbUnitConfiguration(failureHandler = DiffCollectingFailureHandler.class)
+@DbUnitConfiguration(failureHandler = DiffCollectingFailureHandler.class)
 @ContextConfiguration
 @EnableTransactionManagement
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class, DbUnitTestExecutionListener.class })
