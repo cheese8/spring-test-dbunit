@@ -27,6 +27,7 @@ import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.*;
 import org.dbunit.dataset.filter.IColumnFilter;
 import org.dbunit.operation.ExecuteSqlOperation;
+import org.dbunit.operation.TruncateTableOperation;
 import org.springframework.core.io.ClassRelativeResourceLoader;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
@@ -184,6 +185,25 @@ public class DbUnitRunner {
 						continue;
 					}
 					dbUnitOperation.execute(connection, each);
+				}
+				continue;
+			}
+			if (dbUnitOperation instanceof TruncateTableOperation) {
+				for (String each : annotation.getValue()) {
+					Resource resource1 = getClassRelativeResource(testContext.getTestClass(), each);
+					Resource resource2 = getClasspathResource(each);
+					if (!resource1.exists() && !resource2.exists()) {
+						dbUnitOperation.execute(connection, each);
+					} else {
+						List<IDataSet> datasets = loadDataSets(testContext, annotation);
+						if (!datasets.isEmpty()) {
+							if (logger.isDebugEnabled()) {
+								logger.debug("Executing " + (isSetup ? "Setup" : "Teardown") + " of @DatabaseTest using "+ operation + " on " + datasets);
+							}
+							IDataSet dataSet = new CompositeDataSet(datasets.toArray(new IDataSet[datasets.size()]));
+							dbUnitOperation.execute(connection, dataSet);
+						}
+					}
 				}
 				continue;
 			}

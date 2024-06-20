@@ -44,6 +44,14 @@ public class PersonServiceTest {
 	}
 
 	@Test
+	@DatabaseSetup("sampleData4.xml")
+	public void testFind4() {
+		List<Person> personList = this.personService.find("hil");
+		assertEquals(1, personList.size());
+		assertEquals("Phillip", personList.get(0).getFirstName());
+	}
+
+	@Test
 	@DatabaseSetup(type = DatabaseOperation.SQL, value = {"select * from person", "select id from person"})
 	@DatabaseSetup("sampleData.xml")
 	public void testFind_0() {
