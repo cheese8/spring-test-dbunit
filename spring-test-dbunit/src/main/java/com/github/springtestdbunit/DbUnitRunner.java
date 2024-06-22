@@ -16,16 +16,22 @@
 
 package com.github.springtestdbunit;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
 import com.github.springtestdbunit.annotation.*;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.dbunit.DataSourceDatabaseTester;
 import org.dbunit.assertion.FailureHandler;
-import org.dbunit.database.IDatabaseConnection;
+import org.dbunit.database.*;
 import org.dbunit.dataset.*;
+import org.dbunit.dataset.csv.CsvDataSetWriter;
 import org.dbunit.dataset.filter.IColumnFilter;
+import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.operation.ExecuteSqlOperation;
 import org.dbunit.operation.TruncateTableOperation;
 import org.springframework.core.io.ClassRelativeResourceLoader;
@@ -33,11 +39,14 @@ import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import com.github.springtestdbunit.assertion.DatabaseAssertion;
 import com.github.springtestdbunit.dataset.DataSetLoader;
 import com.github.springtestdbunit.dataset.DataSetModifier;
+
+import javax.sql.DataSource;
 
 /**
  * Internal delegate class used to run tests with support for {@link DatabaseSetup &#064;DatabaseSetup},
@@ -71,6 +80,7 @@ public class DbUnitRunner {
 		try {
 			try {
 				verifyExpected(testContext, Annotations.get(testContext, ExpectedDatabases.class, ExpectedDatabase.class));
+				doExport(testContext, Annotations.get(testContext, Exports.class, Export.class));
 			} finally {
 				Annotations<DatabaseTearDown> annotations = Annotations.get(testContext, DatabaseTearDowns.class, DatabaseTearDown.class);
 				try {
@@ -87,6 +97,27 @@ public class DbUnitRunner {
 		} finally {
 			testContext.getConnections().closeAll();
 		}
+	}
+
+	private void doExport(DbUnitTestContext testContext, Annotations<Export> annotations) throws Exception {
+		if (testContext.getTestException() != null) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Skipping @Export expectation due to test exception " + testContext.getTestException().getClass());
+			}
+			return;
+		}
+		String testClassPackage = "src/test/resources/" + testContext.getTestClass().getPackage().getName().replaceAll("\\.", "/");
+		DatabaseConnections connections = testContext.getConnections();
+		IDatabaseConnection connection = null;
+		String fileName = "", format = "";
+		List<Pair<String, String>> tableNameAndSql = new ArrayList<>();
+		for (Export annotation : annotations.getMethodAnnotations()) {
+			connection = connections.get(annotation.connection());
+			fileName = annotation.fileName();
+			format = annotation.format();
+			tableNameAndSql.add(Pair.of(annotation.tableName(), annotation.query()));
+		}
+		export(connection, testClassPackage + "/" + fileName, tableNameAndSql, format);
 	}
 
 	private void verifyExpected(DbUnitTestContext testContext, Annotations<ExpectedDatabase> annotations) throws Exception {
@@ -143,6 +174,22 @@ public class DbUnitRunner {
 				IDataSet actualDataSet = connection.createDataSet();
 				assertion.assertEquals(expectedDataSet, actualDataSet, columnFilters, ignoredColumns, failureHandler);
 			}
+		}
+	}
+
+	public static void export(IDatabaseConnection connection, String fileName, List<Pair<String, String>> tableNameAndSql, String format) throws DataSetException, IOException {
+		connection.getConfig().setProperty(DatabaseConfig.FEATURE_QUALIFIED_TABLE_NAMES, true);
+		DatabaseConfig config = connection.getConfig();
+		config.setProperty(DatabaseConfig.PROPERTY_RESULTSET_TABLE_FACTORY, new CachedResultSetTableFactory());
+		if (CollectionUtils.isEmpty(tableNameAndSql)) return;
+		QueryDataSet queryDataSet = new QueryDataSet(connection);
+		for(Pair<String, String> each : tableNameAndSql) {
+			queryDataSet.addTable(each.getLeft(), each.getRight());
+		}
+		if ("csv".equalsIgnoreCase(format)) {
+			//CsvDataSetWriter.write(queryDataSet, new File("csv/" + tableName + "/" + fileName));
+		} else if ("xml".equalsIgnoreCase(format)){
+			FlatXmlDataSet.write(queryDataSet, FileUtils.openOutputStream(new File(fileName)));
 		}
 	}
 
@@ -267,9 +314,8 @@ public class DbUnitRunner {
 		 * @throws DataSetException An exception thrown if the dataset itself has a problem.
 		 * @throws IOException An exception thrown if the dataset could not be loaded.
 		 */
-		private IDataSet loadDataset(final DbUnitTestContext testContext,
-		final AbstractDatabaseAnnotationAttributes annotation, final String dataSetLocation,
-		final DataSetModifier modifier) throws Exception {
+	private IDataSet loadDataset(final DbUnitTestContext testContext, final AbstractDatabaseAnnotationAttributes annotation,
+								 final String dataSetLocation, final DataSetModifier modifier) throws Exception {
 			DataSetLoader dataSetLoader = DataSetAnnotationUtils.getDataSetLoader(testContext, annotation);
 		//DataSetLoader dataSetLoader = testContext.getDataSetLoader();
 		if (StringUtils.hasLength(dataSetLocation)) {
