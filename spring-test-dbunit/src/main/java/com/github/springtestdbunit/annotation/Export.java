@@ -18,4 +18,6 @@ public @interface Export {
 	String format() default "xml";
 
 	String query() default "";
+
+	boolean xmlElement() default false;
 }

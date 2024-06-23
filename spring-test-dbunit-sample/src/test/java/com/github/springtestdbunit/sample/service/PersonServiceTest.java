@@ -160,4 +160,14 @@ public class PersonServiceTest {
 		bankcardService.remove(1);
 	}
 
+	@Test
+	@DatabaseSetup(value = "sampleData3.xlsx", dataSetLoader = XlsDataSetLoader.class)
+	@ExpectedDatabase(value = "expectedData3.xlsx", dataSetLoader = XlsDataSetLoader.class, table = "person,bankcard")
+	@Exports(value = { @Export(tableName = "person", query = "select * from person", format = "json"),
+			@Export(tableName = "bankcard", query = "select * from bankcard", format = "json")})
+	public void testRemoveAndExportJson2() throws Exception {
+		personService.remove(1);
+		bankcardService.remove(1);
+	}
+
 }

@@ -116,13 +116,15 @@ public class DbUnitRunner {
 		List<Pair<String, String>> tableNameAndSql = new ArrayList<>();
 		List<Export> list =  annotations.getMethodAnnotations();
 		if (CollectionUtils.isEmpty(list)) return;
+		boolean xmlElement = false;
 		for (Export annotation : list) {
 			connection = connections.get(annotation.connection());
-			fileName = annotation.fileName();
+			fileName = StringUtils.isEmpty(annotation.fileName()) ? testContext.getTestMethod().getName() : annotation.fileName();
 			format = annotation.format();
+			xmlElement = annotation.xmlElement();
 			tableNameAndSql.add(Pair.of(annotation.tableName(), annotation.query()));
 		}
-		export(connection, testClassPackage + "/" + fileName, tableNameAndSql, format);
+		export(connection, testClassPackage + "/" + fileName, tableNameAndSql, format, xmlElement);
 	}
 
 	private void verifyExpected(DbUnitTestContext testContext, Annotations<ExpectedDatabase> annotations) throws Exception {
@@ -182,19 +184,20 @@ public class DbUnitRunner {
 		}
 	}
 
-	public static void export(IDatabaseConnection connection, String fileName, List<Pair<String, String>> tableNameAndSql, String format) throws DataSetException, IOException {
+	public static void export(IDatabaseConnection connection, String fileName, List<Pair<String, String>> tableNameAndSql, String format, boolean xmlElement) throws DataSetException, IOException {
 		connection.getConfig().setProperty(DatabaseConfig.FEATURE_QUALIFIED_TABLE_NAMES, true);
 		DatabaseConfig config = connection.getConfig();
 		config.setProperty(DatabaseConfig.PROPERTY_RESULTSET_TABLE_FACTORY, new CachedResultSetTableFactory());
 		if (CollectionUtils.isEmpty(tableNameAndSql)) return;
 		QueryDataSet queryDataSet = new QueryDataSet(connection);
+		Collections.sort(tableNameAndSql, Comparator.comparing(Pair::getLeft));
 		for(Pair<String, String> each : tableNameAndSql) {
 			queryDataSet.addTable(each.getLeft(), each.getRight());
 		}
 		if ("csv".equalsIgnoreCase(format)) {
 			//CsvDataSetWriter.write(queryDataSet, new File("csv/" + tableName + "/" + fileName));
 		} else if ("xml".equalsIgnoreCase(format)){
-			FlatXmlDataSet.write(queryDataSet, FileUtils.openOutputStream(new File(fileName + "." + format)));
+			FlatXmlDataSet.write(queryDataSet, FileUtils.openOutputStream(new File(fileName + "." + format)), xmlElement);
 		} else if ("json".equalsIgnoreCase(format)) {
 			JsonDataSet.write(queryDataSet, FileUtils.openOutputStream(new File(fileName + "." + format)));
 		} else if ("xls".equalsIgnoreCase(format) || "xlsx".equalsIgnoreCase(format)) {
