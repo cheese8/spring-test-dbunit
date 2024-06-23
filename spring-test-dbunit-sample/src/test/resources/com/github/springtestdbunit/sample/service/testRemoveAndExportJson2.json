@@ -1,0 +1,30 @@
+{
+  "bankcard": [
+    {
+      "BANKCARDNAME": "PAB",
+      "BANKCARDNO": 123,
+      "ID": 0,
+      "PERSONID": 1
+    },
+    {
+      "BANKCARDNAME": "ICBC",
+      "BANKCARDNO": 789,
+      "ID": 2,
+      "PERSONID": 0
+    }
+  ],
+  "person": [
+    {
+      "FIRSTNAME": "Phillip",
+      "ID": 0,
+      "LASTNAME": "Webb",
+      "TITLE": "Mr"
+    },
+    {
+      "FIRSTNAME": "Paul",
+      "ID": 2,
+      "LASTNAME": "Podgorsek",
+      "TITLE": "Mr"
+    }
+  ]
+}
