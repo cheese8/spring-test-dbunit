@@ -30,8 +30,11 @@ import org.dbunit.assertion.FailureHandler;
 import org.dbunit.database.*;
 import org.dbunit.dataset.*;
 import org.dbunit.dataset.csv.CsvDataSetWriter;
+import org.dbunit.dataset.excel.XlsDataSet;
 import org.dbunit.dataset.filter.IColumnFilter;
+import org.dbunit.dataset.json.JsonDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
+import org.dbunit.dataset.yaml.YamlDataSet;
 import org.dbunit.operation.ExecuteSqlOperation;
 import org.dbunit.operation.TruncateTableOperation;
 import org.springframework.core.io.ClassRelativeResourceLoader;
@@ -111,7 +114,9 @@ public class DbUnitRunner {
 		IDatabaseConnection connection = null;
 		String fileName = "", format = "";
 		List<Pair<String, String>> tableNameAndSql = new ArrayList<>();
-		for (Export annotation : annotations.getMethodAnnotations()) {
+		List<Export> list =  annotations.getMethodAnnotations();
+		if (CollectionUtils.isEmpty(list)) return;
+		for (Export annotation : list) {
 			connection = connections.get(annotation.connection());
 			fileName = annotation.fileName();
 			format = annotation.format();
@@ -189,7 +194,13 @@ public class DbUnitRunner {
 		if ("csv".equalsIgnoreCase(format)) {
 			//CsvDataSetWriter.write(queryDataSet, new File("csv/" + tableName + "/" + fileName));
 		} else if ("xml".equalsIgnoreCase(format)){
-			FlatXmlDataSet.write(queryDataSet, FileUtils.openOutputStream(new File(fileName)));
+			FlatXmlDataSet.write(queryDataSet, FileUtils.openOutputStream(new File(fileName + "." + format)));
+		} else if ("json".equalsIgnoreCase(format)) {
+			JsonDataSet.write(queryDataSet, FileUtils.openOutputStream(new File(fileName + "." + format)));
+		} else if ("xls".equalsIgnoreCase(format) || "xlsx".equalsIgnoreCase(format)) {
+			XlsDataSet.write(queryDataSet, FileUtils.openOutputStream(new File(fileName+ "." + format)));;
+		} else if ("yml".equalsIgnoreCase(format) || "yaml".equalsIgnoreCase(format)) {
+			YamlDataSet.write(queryDataSet, FileUtils.openOutputStream(new File(fileName+ "." + format)));;
 		}
 	}
 

@@ -125,7 +125,37 @@ public class PersonServiceTest {
 	@ExpectedDatabase(value = "expectedData3.xlsx", dataSetLoader = XlsDataSetLoader.class, table = "person,bankcard")
 	@Exports(value = { @Export(fileName = "testRemoveAndExport.xml", tableName = "person", query = "select * from person"),
 			@Export(fileName = "testRemoveAndExport.xml", tableName = "bankcard", query = "select * from bankcard")})
-	public void testRemoveAndExport() throws Exception {
+	public void testRemoveAndExportXMl() throws Exception {
+		personService.remove(1);
+		bankcardService.remove(1);
+	}
+
+	@Test
+	@DatabaseSetup(value = "sampleData3.xlsx", dataSetLoader = XlsDataSetLoader.class)
+	@ExpectedDatabase(value = "expectedData3.xlsx", dataSetLoader = XlsDataSetLoader.class, table = "person,bankcard")
+	@Exports(value = { @Export(fileName = "testRemoveAndExport.xml", tableName = "person", query = "select * from person", format = "yml"),
+			@Export(fileName = "testRemoveAndExport.xml", tableName = "bankcard", query = "select * from bankcard", format = "yml")})
+	public void testRemoveAndExportYml() throws Exception {
+		personService.remove(1);
+		bankcardService.remove(1);
+	}
+
+	@Test
+	@DatabaseSetup(value = "sampleData3.xlsx", dataSetLoader = XlsDataSetLoader.class)
+	@ExpectedDatabase(value = "expectedData3.xlsx", dataSetLoader = XlsDataSetLoader.class, table = "person,bankcard")
+	@Exports(value = { @Export(fileName = "testRemoveAndExport.xml", tableName = "person", query = "select * from person", format = "xls"),
+			@Export(fileName = "testRemoveAndExport.xml", tableName = "bankcard", query = "select * from bankcard", format = "xls")})
+	public void testRemoveAndExportXls() throws Exception {
+		personService.remove(1);
+		bankcardService.remove(1);
+	}
+
+	@Test
+	@DatabaseSetup(value = "sampleData3.xlsx", dataSetLoader = XlsDataSetLoader.class)
+	@ExpectedDatabase(value = "expectedData3.xlsx", dataSetLoader = XlsDataSetLoader.class, table = "person,bankcard")
+	@Exports(value = { @Export(fileName = "testRemoveAndExport.xml", tableName = "person", query = "select * from person", format = "json"),
+			@Export(fileName = "testRemoveAndExport.xml", tableName = "bankcard", query = "select * from bankcard", format = "json")})
+	public void testRemoveAndExportJson() throws Exception {
 		personService.remove(1);
 		bankcardService.remove(1);
 	}
