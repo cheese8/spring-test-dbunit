@@ -117,14 +117,16 @@ public class DbUnitRunner {
 		List<Export> list =  annotations.getMethodAnnotations();
 		if (CollectionUtils.isEmpty(list)) return;
 		boolean xmlElement = false;
+		String[] replacements = new String[]{};
 		for (Export annotation : list) {
 			connection = connections.get(annotation.connection());
 			fileName = StringUtils.isEmpty(annotation.fileName()) ? testContext.getTestMethod().getName() : annotation.fileName();
 			format = annotation.format();
 			xmlElement = annotation.xmlElement();
+			replacements = annotation.replacements();
 			tableNameAndSql.add(Pair.of(annotation.tableName(), annotation.query()));
 		}
-		export(connection, testClassPackage + "/" + fileName, tableNameAndSql, format, xmlElement);
+		export(connection, testClassPackage + "/" + fileName, tableNameAndSql, format, xmlElement, replacements);
 	}
 
 	private void verifyExpected(DbUnitTestContext testContext, Annotations<ExpectedDatabase> annotations) throws Exception {
@@ -184,7 +186,7 @@ public class DbUnitRunner {
 		}
 	}
 
-	public static void export(IDatabaseConnection connection, String fileName, List<Pair<String, String>> tableNameAndSql, String format, boolean xmlElement) throws DataSetException, IOException {
+	public static void export(IDatabaseConnection connection, String fileName, List<Pair<String, String>> tableNameAndSql, String format, boolean xmlElement, String[] replacements) throws DataSetException, IOException {
 		connection.getConfig().setProperty(DatabaseConfig.FEATURE_QUALIFIED_TABLE_NAMES, true);
 		DatabaseConfig config = connection.getConfig();
 		config.setProperty(DatabaseConfig.PROPERTY_RESULTSET_TABLE_FACTORY, new CachedResultSetTableFactory());
@@ -195,15 +197,15 @@ public class DbUnitRunner {
 			queryDataSet.addTable(each.getLeft(), each.getRight());
 		}
 		if ("csv".equalsIgnoreCase(format)) {
-			//CsvDataSetWriter.write(queryDataSet, new File("csv/" + tableName + "/" + fileName));
+			CsvDataSetWriter.write(queryDataSet, new File(fileName + "." + format));
 		} else if ("xml".equalsIgnoreCase(format)){
-			FlatXmlDataSet.write(queryDataSet, FileUtils.openOutputStream(new File(fileName + "." + format)), xmlElement);
+			FlatXmlDataSet.write(queryDataSet, FileUtils.openOutputStream(new File(fileName + "." + format)), xmlElement, replacements);
 		} else if ("json".equalsIgnoreCase(format)) {
-			JsonDataSet.write(queryDataSet, FileUtils.openOutputStream(new File(fileName + "." + format)));
+			JsonDataSet.write(queryDataSet, FileUtils.openOutputStream(new File(fileName + "." + format)), replacements);
 		} else if ("xls".equalsIgnoreCase(format) || "xlsx".equalsIgnoreCase(format)) {
-			XlsDataSet.write(queryDataSet, FileUtils.openOutputStream(new File(fileName+ "." + format)));;
+			XlsDataSet.write(queryDataSet, FileUtils.openOutputStream(new File(fileName+ "." + format)), replacements);
 		} else if ("yml".equalsIgnoreCase(format) || "yaml".equalsIgnoreCase(format)) {
-			YamlDataSet.write(queryDataSet, FileUtils.openOutputStream(new File(fileName+ "." + format)));;
+			YamlDataSet.write(queryDataSet, FileUtils.openOutputStream(new File(fileName+ "." + format)), replacements);
 		}
 	}
 

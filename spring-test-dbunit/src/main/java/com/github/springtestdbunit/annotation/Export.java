@@ -20,4 +20,6 @@ public @interface Export {
 	String query() default "";
 
 	boolean xmlElement() default false;
+
+	String[] replacements() default {};
 }

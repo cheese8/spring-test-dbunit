@@ -3,26 +3,26 @@
     {
       "BANKCARDNAME": "PAB",
       "BANKCARDNO": 123,
-      "ID": 0,
+      "ID": "[ID()]",
       "PERSONID": 1
     },
     {
       "BANKCARDNAME": "ICBC",
       "BANKCARDNO": 789,
-      "ID": 2,
+      "ID": "[ID()]",
       "PERSONID": 0
     }
   ],
   "person": [
     {
       "FIRSTNAME": "Phillip",
-      "ID": 0,
+      "ID": "[ID()]",
       "LASTNAME": "Webb",
       "TITLE": "Mr"
     },
     {
       "FIRSTNAME": "Paul",
-      "ID": 2,
+      "ID": "[ID()]",
       "LASTNAME": "Podgorsek",
       "TITLE": "Mr"
     }

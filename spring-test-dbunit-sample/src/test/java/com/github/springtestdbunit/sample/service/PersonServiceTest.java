@@ -123,8 +123,8 @@ public class PersonServiceTest {
 	@Test
 	@DatabaseSetup(value = "sampleData3.xlsx", dataSetLoader = XlsDataSetLoader.class)
 	@ExpectedDatabase(value = "expectedData3.xlsx", dataSetLoader = XlsDataSetLoader.class, table = "person,bankcard")
-	@Exports(value = { @Export(fileName = "testRemoveAndExport.xml", tableName = "person", query = "select * from person"),
-			@Export(fileName = "testRemoveAndExport.xml", tableName = "bankcard", query = "select * from bankcard")})
+	@Exports(value = { @Export(fileName = "testRemoveAndExport.xml", tableName = "person", query = "select * from person", replacements = {"ID", "[ID()]"}),
+			@Export(fileName = "testRemoveAndExport.xml", tableName = "bankcard", query = "select * from bankcard", replacements = {"ID", "[ID()]"})})
 	public void testRemoveAndExportXMl() throws Exception {
 		personService.remove(1);
 		bankcardService.remove(1);
@@ -133,8 +133,8 @@ public class PersonServiceTest {
 	@Test
 	@DatabaseSetup(value = "sampleData3.xlsx", dataSetLoader = XlsDataSetLoader.class)
 	@ExpectedDatabase(value = "expectedData3.xlsx", dataSetLoader = XlsDataSetLoader.class, table = "person,bankcard")
-	@Exports(value = { @Export(fileName = "testRemoveAndExport.xml", tableName = "person", query = "select * from person", format = "yml"),
-			@Export(fileName = "testRemoveAndExport.xml", tableName = "bankcard", query = "select * from bankcard", format = "yml")})
+	@Exports(value = { @Export(fileName = "testRemoveAndExport.xml", tableName = "person", query = "select * from person", format = "yml", replacements = {"ID", "[ID()]"}),
+			@Export(fileName = "testRemoveAndExport.xml", tableName = "bankcard", query = "select * from bankcard", format = "yml", replacements = {"ID", "[ID()]"})})
 	public void testRemoveAndExportYml() throws Exception {
 		personService.remove(1);
 		bankcardService.remove(1);
@@ -143,8 +143,8 @@ public class PersonServiceTest {
 	@Test
 	@DatabaseSetup(value = "sampleData3.xlsx", dataSetLoader = XlsDataSetLoader.class)
 	@ExpectedDatabase(value = "expectedData3.xlsx", dataSetLoader = XlsDataSetLoader.class, table = "person,bankcard")
-	@Exports(value = { @Export(fileName = "testRemoveAndExport.xml", tableName = "person", query = "select * from person", format = "xls"),
-			@Export(fileName = "testRemoveAndExport.xml", tableName = "bankcard", query = "select * from bankcard", format = "xls")})
+	@Exports(value = { @Export(fileName = "testRemoveAndExport.xml", tableName = "person", query = "select * from person", format = "xls", replacements = {"ID", "[ID()]"}),
+			@Export(fileName = "testRemoveAndExport.xml", tableName = "bankcard", query = "select * from bankcard", format = "xls", replacements = {"ID", "[ID()]"})})
 	public void testRemoveAndExportXls() throws Exception {
 		personService.remove(1);
 		bankcardService.remove(1);
@@ -153,8 +153,8 @@ public class PersonServiceTest {
 	@Test
 	@DatabaseSetup(value = "sampleData3.xlsx", dataSetLoader = XlsDataSetLoader.class)
 	@ExpectedDatabase(value = "expectedData3.xlsx", dataSetLoader = XlsDataSetLoader.class, table = "person,bankcard")
-	@Exports(value = { @Export(fileName = "testRemoveAndExport.xml", tableName = "person", query = "select * from person", format = "json"),
-			@Export(fileName = "testRemoveAndExport.xml", tableName = "bankcard", query = "select * from bankcard", format = "json")})
+	@Exports(value = { @Export(fileName = "testRemoveAndExport.xml", tableName = "person", query = "select * from person", format = "json", replacements = {"ID", "[ID()]"}),
+			@Export(fileName = "testRemoveAndExport.xml", tableName = "bankcard", query = "select * from bankcard", format = "json", replacements = {"ID", "[ID()]"})})
 	public void testRemoveAndExportJson() throws Exception {
 		personService.remove(1);
 		bankcardService.remove(1);
