@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dataset>
-  <bankcard BANKCARDNAME="0" BANKCARDNO="PAB" ID="[ID()]" PERSONID="1"/>
-  <bankcard BANKCARDNAME="ICBC" BANKCARDNO="789" ID="[ID()]" PERSONID="0"/>
-  <person FIRSTNAME="0" ID="[ID()]" LASTNAME="Webb" TITLE="Mr"/>
-  <person FIRSTNAME="Paul" ID="[ID()]" LASTNAME="Podgorsek" TITLE="Mr"/>
+  <bankcard ID="[ID()]" BANKCARDNAME="PAB" BANKCARDNO="123" PERSONID="1"/>
+  <bankcard ID="[ID()]" BANKCARDNAME="ICBC" BANKCARDNO="789" PERSONID="0"/>
+  <person ID="[ID()]" FIRSTNAME="Phillip" LASTNAME="Webb" TITLE="Mr"/>
+  <person ID="[ID()]" FIRSTNAME="Paul" LASTNAME="Podgorsek" TITLE="Mr"/>
 </dataset>

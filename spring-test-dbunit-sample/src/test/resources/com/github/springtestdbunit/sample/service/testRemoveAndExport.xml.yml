@@ -1,18 +1,18 @@
 bankcard:
-  - BANKCARDNAME: PAB
+  - ID: '[ID()]'
+    BANKCARDNAME: PAB
     BANKCARDNO: 123
-    ID: '[ID()]'
     PERSONID: 1
-  - BANKCARDNAME: ICBC
+  - ID: '[ID()]'
+    BANKCARDNAME: ICBC
     BANKCARDNO: 789
-    ID: '[ID()]'
     PERSONID: 0
 person:
-  - FIRSTNAME: Phillip
-    ID: '[ID()]'
+  - ID: '[ID()]'
+    FIRSTNAME: Phillip
     LASTNAME: Webb
     TITLE: Mr
-  - FIRSTNAME: Paul
-    ID: '[ID()]'
+  - ID: '[ID()]'
+    FIRSTNAME: Paul
     LASTNAME: Podgorsek
     TITLE: Mr

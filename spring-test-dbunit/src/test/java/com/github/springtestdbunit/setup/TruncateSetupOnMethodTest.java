@@ -49,7 +49,7 @@ public class TruncateSetupOnMethodTest {
 	@Test
 	@DatabaseSetup(type = DatabaseOperation.TRUNCATE_TABLE)
 	public void testAllTables() {
-		this.entityAssert.assertValues();
+		this.entityAssert.assertValues("existing1", "existing2");
 	}
 
 }

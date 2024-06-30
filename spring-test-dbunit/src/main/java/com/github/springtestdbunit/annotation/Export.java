@@ -20,6 +20,6 @@ public @interface Export {
 	String query() default "";
 
 	boolean xmlElement() default false;
-
+	boolean sortColumn() default false;
 	String[] replacements() default {};
 }
