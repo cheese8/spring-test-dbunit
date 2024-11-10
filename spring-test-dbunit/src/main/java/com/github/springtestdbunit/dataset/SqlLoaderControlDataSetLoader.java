@@ -34,7 +34,7 @@ public class SqlLoaderControlDataSetLoader extends AbstractDataSetLoader {
 	private static final String ORDERED_TABLE_FILE = "tables.lst";
 
 	@Override
-	protected IDataSet createDataSet(final Resource resource) throws IOException, DataSetException {
+	protected IDataSet createDataSet(final Resource resource, String[] datasetId) throws IOException, DataSetException {
 
 		File ctlDir = resource.getFile();
 		String ctlDirPath = ctlDir.getAbsolutePath();

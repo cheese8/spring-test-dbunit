@@ -337,7 +337,7 @@ public class DbUnitRunner {
 			DataSetLoader dataSetLoader = DataSetAnnotationUtils.getDataSetLoader(testContext, annotation);
 		//DataSetLoader dataSetLoader = testContext.getDataSetLoader();
 		if (StringUtils.hasLength(dataSetLocation)) {
-			IDataSet dataSet = dataSetLoader.loadDataSet(testContext.getTestClass(), dataSetLocation);
+			IDataSet dataSet = dataSetLoader.loadDataSet(testContext.getTestClass(), dataSetLocation, annotation.getDatasetId());
 			dataSet = modifier.modify(dataSet);
 			Assert.notNull(dataSet,"Unable to load dataset from \"" + dataSetLocation + "\" using " + dataSetLoader.getClass());
 			return dataSet;

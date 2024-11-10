@@ -21,13 +21,13 @@ import org.springframework.core.io.*;
 
 /**
  * Abstract data set loader, which provides a basis for concrete implementations of the {@link DataSetLoader} strategy.
- * Provides a <em>Template Method</em> based approach for {@link #loadDataSet(Class, String) loading} data using a
+ * Provides a <em>Template Method</em> based approach for {@link #loadDataSet(Class, String, String[]) loading} data using a
  * Spring {@link #getResourceLoader resource loader}.
  *
  * @author Phillip Webb
  *
  * @see #getResourceLoader
- * @see #createDataSet(Resource)
+ * @see #createDataSet(Resource, String[])
  */
 public abstract class AbstractDataSetLoader implements DataSetLoader {
 
@@ -37,17 +37,17 @@ public abstract class AbstractDataSetLoader implements DataSetLoader {
 	 * <p>
 	 * If no resource can be found then <code>null</code> will be returned.
 	 *
-	 * @see #createDataSet(Resource)
-	 * @see com.github.springtestdbunit.dataset.DataSetLoader#loadDataSet(Class, String) java.lang.String)
+	 * @see #createDataSet(Resource, String[])
+	 * @see com.github.springtestdbunit.dataset.DataSetLoader#loadDataSet(Class, String, String[]) java.lang.String)
 	 */
-	public IDataSet loadDataSet(Class<?> testClass, String location) throws Exception {
+	public IDataSet loadDataSet(Class<?> testClass, String location, String[] datasetId) throws Exception {
 		Resource resource = getClassRelativeResource(testClass, location);
 		if (resource.exists()) {
-			return createDataSet(resource);
+			return createDataSet(resource, datasetId);
 		}
 		resource = getClasspathResource(location);
 		if (resource.exists()) {
-			return createDataSet(resource);
+			return createDataSet(resource, datasetId);
 		}
 		return null;
 	}
@@ -79,6 +79,6 @@ public abstract class AbstractDataSetLoader implements DataSetLoader {
 	 * @return a dataset
 	 * @throws Exception if the dataset could not be loaded
 	 */
-	protected abstract IDataSet createDataSet(Resource resource) throws Exception;
+	protected abstract IDataSet createDataSet(Resource resource, String[] datasetId) throws Exception;
 
 }

@@ -51,13 +51,13 @@ public class FlatXmlDataSetLoaderTest {
 
 	@Test
 	public void shouldSenseColumnsWithClassRelative() throws Exception {
-		IDataSet dataset = this.loader.loadDataSet(this.testContext.getTestClass(), "test-column-sensing.xml");
+		IDataSet dataset = this.loader.loadDataSet(this.testContext.getTestClass(), "test-column-sensing.xml", null);
 		assertDataset(dataset);
 	}
 
 	@Test
 	public void shouldSenseColumnsWithClassPath() throws Exception {
-		IDataSet dataset = this.loader.loadDataSet(this.testContext.getTestClass(), "test-column-sensing-classpath.xml");
+		IDataSet dataset = this.loader.loadDataSet(this.testContext.getTestClass(), "test-column-sensing-classpath.xml", null);
 		assertDataset(dataset);
 	}
 
@@ -68,13 +68,13 @@ public class FlatXmlDataSetLoaderTest {
 
 	@Test
 	public void shouldLoadFromRelativeFile() throws Exception {
-		IDataSet dataset = this.loader.loadDataSet(this.testContext.getTestClass(), "test.xml");
+		IDataSet dataset = this.loader.loadDataSet(this.testContext.getTestClass(), "test.xml", null);
 		assertEquals("Sample", dataset.getTableNames()[0]);
 	}
 
 	@Test
 	public void shouldReturnNullOnMissingFile() throws Exception {
-		IDataSet dataset = this.loader.loadDataSet(this.testContext.getTestClass(), "doesnotexist.xml");
+		IDataSet dataset = this.loader.loadDataSet(this.testContext.getTestClass(), "doesnotexist.xml", null);
 		assertNull(dataset);
 	}
 

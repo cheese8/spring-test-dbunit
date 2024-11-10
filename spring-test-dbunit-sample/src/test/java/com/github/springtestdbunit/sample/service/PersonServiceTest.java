@@ -33,7 +33,7 @@ public class PersonServiceTest {
 	private BankcardService bankcardService;
 
 	@Test
-	@DatabaseSetup("sampleData.xml")
+	@DatabaseSetup(value = "sampleData_testFind.xml", datasetId = "testFind")
 	public void testFind() {
 		List<Person> personList = this.personService.find("hil");
 		assertEquals(1, personList.size());

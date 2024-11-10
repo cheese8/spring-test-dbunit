@@ -77,8 +77,8 @@ public class ReplacementDataSetLoader implements DataSetLoader {
 		return Collections.unmodifiableMap(result);
 	}
 
-	public IDataSet loadDataSet(Class<?> testClass, String location) throws Exception {
-		IDataSet dataSet = this.dataSetLoader.loadDataSet(testClass, location);
+	public IDataSet loadDataSet(Class<?> testClass, String location, String[] datasetId) throws Exception {
+		IDataSet dataSet = this.dataSetLoader.loadDataSet(testClass, location, datasetId);
 		return new ReplacementDataSet(dataSet, this.objectReplacements,
 				this.subStringReplacements, functionReplacements);
 	}

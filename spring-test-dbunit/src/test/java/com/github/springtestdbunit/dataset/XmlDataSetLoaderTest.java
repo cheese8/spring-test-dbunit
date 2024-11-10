@@ -29,13 +29,13 @@ public class XmlDataSetLoaderTest {
 
 	@Test
 	public void shouldLoadFromRelativeFile() throws Exception {
-		IDataSet dataset = this.loader.loadDataSet(this.testContext.getTestClass(), "non-flat-xmldataset.xml");
+		IDataSet dataset = this.loader.loadDataSet(this.testContext.getTestClass(), "non-flat-xmldataset.xml", null);
 		assertEquals("Sample", dataset.getTableNames()[0]);
 	}
 
 	@Test
 	public void shouldReturnNullOnMissingFile() throws Exception {
-		IDataSet dataset = this.loader.loadDataSet(this.testContext.getTestClass(), "doesnotexist.xml");
+		IDataSet dataset = this.loader.loadDataSet(this.testContext.getTestClass(), "doesnotexist.xml", null);
 		assertNull(dataset);
 	}
 

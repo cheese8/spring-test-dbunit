@@ -16,10 +16,7 @@
 
 package com.github.springtestdbunit.dataset;
 
-import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
-
-import java.io.IOException;
 
 /**
  * Strategy interface for {@link #loadDataSet loading} a {@link IDataSet dataset}.
@@ -40,6 +37,6 @@ public interface DataSetLoader {
 	 * @return a {@link IDataSet dataset} or <code>null</code>
 	 * @throws Exception If the {@link IDataSet dataset} cannot be loaded
 	 */
-	IDataSet loadDataSet(Class<?> testClass, String location) throws Exception;
+	IDataSet loadDataSet(Class<?> testClass, String location, String[] datasetId) throws Exception;
 
 }

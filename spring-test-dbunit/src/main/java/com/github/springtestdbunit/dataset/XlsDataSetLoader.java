@@ -22,7 +22,6 @@ import org.dbunit.dataset.excel.XlsDataSet;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * A {@link DataSetLoader data set loader} that can be used to load {@link XlsDataSet}s.
@@ -32,8 +31,8 @@ import java.io.InputStream;
 public class XlsDataSetLoader extends AbstractDataSetLoader {
 
 	@Override
-	protected IDataSet createDataSet(final Resource resource) throws IOException, DataSetException {
-			return new XlsDataSet(resource.getFile());
+	protected IDataSet createDataSet(final Resource resource, String[] datasetId) throws IOException, DataSetException {
+		return new XlsDataSet(resource.getFile());
 	}
 
 }

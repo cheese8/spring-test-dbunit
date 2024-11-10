@@ -30,7 +30,7 @@ public class ReplacementDataSetLoaderTest {
 
 	@Test
 	public void shouldReplaceNulls() throws Exception {
-		IDataSet dataset = this.loader.loadDataSet(this.testContext.getTestClass(), "test-replacement.xml");
+		IDataSet dataset = this.loader.loadDataSet(this.testContext.getTestClass(), "test-replacement.xml", null);
 		assertEquals("Sample", dataset.getTableNames()[0]);
 		ITable table = dataset.getTable("Sample");
 		assertEquals(1, table.getRowCount());

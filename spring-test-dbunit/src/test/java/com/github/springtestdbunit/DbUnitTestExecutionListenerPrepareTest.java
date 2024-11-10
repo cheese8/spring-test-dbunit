@@ -198,7 +198,7 @@ public class DbUnitTestExecutionListenerPrepareTest {
 	}
 
 	public abstract static class AbstractCustomDataSetLoader implements DataSetLoader {
-		public IDataSet loadDataSet(Class<?> testClass, String location) {
+		public IDataSet loadDataSet(Class<?> testClass, String location, String[] datasetId) {
 			return null;
 		}
 	}

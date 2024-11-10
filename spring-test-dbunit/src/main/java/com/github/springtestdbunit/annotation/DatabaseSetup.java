@@ -93,4 +93,6 @@ public @interface DatabaseSetup {
 	 * @return The data set loader bean name.
 	 */
 	String dataSetLoaderBean() default "";
+
+	String[] datasetId() default "";
 }
