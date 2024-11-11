@@ -50,7 +50,8 @@ public class PersonServiceTest {
 
 	@Test
 	@DatabaseSetup(type = DatabaseOperation.SQL, value = {"select * from person", "select id from person"})
-	@DatabaseSetup("sampleData.xml")
+	//@DatabaseSetup("sampleData.xml")
+	@DatabaseSetup(value = "sampleData_testFind.xml", datasetId = {"all_0", "all_1"})
 	public void testFind_0() {
 		List<Person> personList = this.personService.find("hil");
 		assertEquals(1, personList.size());
@@ -61,7 +62,7 @@ public class PersonServiceTest {
 	//@DatabaseSetup(type = DatabaseOperation.SQL, value = {"select * from person", "select id from person"})
 	@DatabaseSetup(type = DatabaseOperation.TRUNCATE_TABLE, value = {"person"})
 	@DatabaseSetup(type = DatabaseOperation.SQL, value = {"testFind_2.sql"})
-	@DatabaseSetup("sampleData.xml")
+	@DatabaseSetup(value = "sampleData_testFind.xml", datasetId = "testFind2")
 	public void testFind_2() {
 		List<Person> personList = this.personService.find("hil");
 		assertEquals(1, personList.size());
@@ -71,7 +72,7 @@ public class PersonServiceTest {
 	@Test
 	//@DatabaseSetup(type = DatabaseOperation.SQL, value = {"select * from person", "select id from person"})
 	@DatabaseSetup(type = DatabaseOperation.SQL, value = {"testFind_1.sql"})
-	@DatabaseSetup("sampleData.xml")
+	@DatabaseSetup(value = "sampleData_testFind.xml", datasetId = "testFind1")
 	public void testFind_1() {
 		List<Person> personList = this.personService.find("hil");
 		assertEquals(1, personList.size());

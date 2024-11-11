@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <datasets>
+	<dataset id="all_0">
+		<Person id="0" title="Mr" firstName="Phillip" lastName="Webb"/>
+		<Person id="1" title="Mr" firstName="Mario" lastName="Zagar"/>
+	</dataset>
 	<dataset id="testFind">
+		<Person id="0" title="Mr" firstName="Phillip" lastName="Webb"/>
+		<Person id="1" title="Mr" firstName="Mario" lastName="Zagar"/>
+	</dataset>
+	<dataset id="testFind2">
+		<Person id="0" title="Mr" firstName="Phillip" lastName="Webb"/>
+		<Person id="1" title="Mr" firstName="Mario" lastName="Zagar"/>
+	</dataset>
+	<dataset id="testFind1">
 		<Person id="0" title="Mr" firstName="Phillip" lastName="Webb"/>
 		<Person id="1" title="Mr" firstName="Mario" lastName="Zagar"/>
 	</dataset>
