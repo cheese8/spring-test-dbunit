@@ -91,7 +91,7 @@ public class FlatXmlDataSetLoaderTest {
 	private void buildDataSetFromStream(String location) throws DataSetException {
 		FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
 		builder.setColumnSensing(true);
-		IDataSet dataset = ReflectionTestUtils.invokeMethod(this.loader, "buildDataSetFromStream", new Object[]{builder, getClasspathResource(location)});
+		IDataSet dataset = ReflectionTestUtils.invokeMethod(this.loader, "buildDataSetFromStream", new Object[]{builder, getClasspathResource(location), new String[]{}});
 		assertDataset(dataset);
 	}
 
