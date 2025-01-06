@@ -34,9 +34,10 @@ public interface DataSetLoader {
 	 * returned.
 	 * @param testClass The class under test
 	 * @param location The location to load
+	 * @param datasetId datasetId
 	 * @return a {@link IDataSet dataset} or <code>null</code>
 	 * @throws Exception If the {@link IDataSet dataset} cannot be loaded
 	 */
-	IDataSet loadDataSet(Class<?> testClass, String location, String[] datasetId) throws Exception;
+	IDataSet loadDataSet(Class<?> testClass, String location, String datasetId) throws Exception;
 
 }

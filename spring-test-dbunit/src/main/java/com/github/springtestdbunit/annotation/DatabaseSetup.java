@@ -94,5 +94,5 @@ public @interface DatabaseSetup {
 	 */
 	String dataSetLoaderBean() default "";
 
-	String[] datasetId() default "";
+	String datasetId() default "";
 }

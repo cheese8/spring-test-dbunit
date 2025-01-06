@@ -51,7 +51,7 @@ public class PersonServiceTest {
 	@Test
 	@DatabaseSetup(type = DatabaseOperation.SQL, value = {"select * from person", "select id from person"})
 	//@DatabaseSetup("sampleData.xml")
-	@DatabaseSetup(value = "sampleData_testFind.xml", datasetId = {"all_0", "all_1"})
+	@DatabaseSetup(value = "sampleData_testFind.xml", datasetId = "all_0")
 	public void testFind_0() {
 		List<Person> personList = this.personService.find("hil");
 		assertEquals(1, personList.size());

@@ -31,7 +31,7 @@ import java.io.IOException;
 public class XlsDataSetLoader extends AbstractDataSetLoader {
 
 	@Override
-	protected IDataSet createDataSet(final Resource resource, String[] datasetId) throws IOException, DataSetException {
+	protected IDataSet createDataSet(final Resource resource, String datasetId) throws IOException, DataSetException {
 		return new XlsDataSet(resource.getFile());
 	}
 

@@ -136,6 +136,6 @@ public @interface ExpectedDatabase {
 	 */
 	String dataSetLoaderBean() default "";
 
-	String[] datasetId() default "";
+	String datasetId() default "";
 
 }

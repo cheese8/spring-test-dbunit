@@ -32,13 +32,13 @@ import org.springframework.core.io.Resource;
 public class FlatXmlDataSetLoader extends AbstractDataSetLoader {
 
 	@Override
-	protected IDataSet createDataSet(Resource resource, String[] datasetId) throws Exception {
+	protected IDataSet createDataSet(Resource resource, String datasetId) throws Exception {
 		FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
 		builder.setColumnSensing(true);
 		return buildDataSet(builder, resource, datasetId);
 	}
 
-	private IDataSet buildDataSet(FlatXmlDataSetBuilder builder, Resource resource, String[] datasetId) throws Exception {
+	private IDataSet buildDataSet(FlatXmlDataSetBuilder builder, Resource resource, String datasetId) throws Exception {
 		try {
 			// Prefer URL loading if possible so that DTDs can be resolved
 			return buildDataSetFromUrl(builder, resource.getURL(), datasetId);
@@ -47,11 +47,11 @@ public class FlatXmlDataSetLoader extends AbstractDataSetLoader {
 		}
 	}
 
-	private IDataSet buildDataSetFromUrl(FlatXmlDataSetBuilder builder, URL url, String[] datasetId) throws Exception {
+	private IDataSet buildDataSetFromUrl(FlatXmlDataSetBuilder builder, URL url, String datasetId) throws Exception {
 		return builder.build(url, datasetId);
 	}
 
-	private IDataSet buildDataSetFromStream(FlatXmlDataSetBuilder builder, Resource resource, String[] datasetId) throws Exception {
+	private IDataSet buildDataSetFromStream(FlatXmlDataSetBuilder builder, Resource resource, String datasetId) throws Exception {
 		try (InputStream inputStream = resource.getInputStream()) {
 			return builder.build(inputStream, datasetId);
 		}

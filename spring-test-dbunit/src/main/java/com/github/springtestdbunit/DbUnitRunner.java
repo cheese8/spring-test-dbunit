@@ -67,7 +67,7 @@ public class DbUnitRunner {
 	/**
 	 * Called before a test method is executed to perform any database setup.
 	 * @param testContext The test context
-	 * @throws Exception
+	 * @throws Exception exception
 	 */
 	public void beforeTestMethod(DbUnitTestContext testContext) throws Exception {
 		Annotations<DatabaseSetup> annotations = Annotations.get(testContext, DatabaseSetups.class, DatabaseSetup.class);
@@ -77,7 +77,7 @@ public class DbUnitRunner {
 	/**
 	 * Called after a test method is executed to perform any database teardown and to check expected results.
 	 * @param testContext The test context
-	 * @throws Exception
+	 * @throws Exception exception
 	 */
 	public void afterTestMethod(DbUnitTestContext testContext) throws Exception {
 		try {

@@ -41,7 +41,7 @@ public abstract class AbstractDatabaseAnnotationAttributes {
 	 */
 	private final String dataSetLoaderBean;
 	
-	private final String[] datasetId;
+	private final String datasetId;
 
 	@SuppressWarnings("unchecked")
 	public AbstractDatabaseAnnotationAttributes(final Annotation annotation) {
@@ -55,7 +55,7 @@ public abstract class AbstractDatabaseAnnotationAttributes {
 		connection = (String) attributes.get("connection");
 		dataSetLoader = (Class<? extends DataSetLoader>) attributes.get("dataSetLoader");
 		dataSetLoaderBean = (String) attributes.get("dataSetLoaderBean");
-		datasetId = (String[]) attributes.get("datasetId");
+		datasetId = (String) attributes.get("datasetId");
 	}
 
 	public String getConnection() {
@@ -70,7 +70,7 @@ public abstract class AbstractDatabaseAnnotationAttributes {
 		return dataSetLoaderBean;
 	}
 
-	public String[] getDatasetId() {
+	public String getDatasetId() {
 		return this.datasetId;
 	}
 }

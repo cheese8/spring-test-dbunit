@@ -58,7 +58,7 @@ public class ReplacementDataSetLoader implements DataSetLoader {
 	 * @param dataSetLoader the source data set loader
 	 * @param objectReplacements the object replacements or {@code null} if no object replacements are required
 	 * @param subStringReplacements the sub-string replacements or {@code null} if no sub-string replacements are
-	 * required
+	 * @param functionReplacements the replacementFunction replacements
 	 */
 	public ReplacementDataSetLoader(DataSetLoader dataSetLoader, Map<?, ?> objectReplacements,
 			Map<String, String> subStringReplacements, Map<String, ReplacementFunction> functionReplacements) {
@@ -77,7 +77,7 @@ public class ReplacementDataSetLoader implements DataSetLoader {
 		return Collections.unmodifiableMap(result);
 	}
 
-	public IDataSet loadDataSet(Class<?> testClass, String location, String[] datasetId) throws Exception {
+	public IDataSet loadDataSet(Class<?> testClass, String location, String datasetId) throws Exception {
 		IDataSet dataSet = this.dataSetLoader.loadDataSet(testClass, location, datasetId);
 		return new ReplacementDataSet(dataSet, this.objectReplacements,
 				this.subStringReplacements, functionReplacements);

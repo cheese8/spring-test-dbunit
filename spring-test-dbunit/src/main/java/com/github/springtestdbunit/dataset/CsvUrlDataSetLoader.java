@@ -31,7 +31,7 @@ import java.io.IOException;
 public class CsvUrlDataSetLoader extends AbstractDataSetLoader {
 
 	@Override
-	protected IDataSet createDataSet(Resource resource, String[] datasetId) throws DataSetException, IOException {
+	protected IDataSet createDataSet(Resource resource, String datasetId) throws DataSetException, IOException {
 		return new CsvURLDataSet(resource.getURL());
 	}
 
