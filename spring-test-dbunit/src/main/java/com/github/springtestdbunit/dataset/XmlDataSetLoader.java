@@ -17,7 +17,7 @@ public class XmlDataSetLoader extends AbstractDataSetLoader {
 	@Override
 	protected IDataSet createDataSet(Resource resource, String datasetId) throws Exception {
 		try (InputStream inputStream = resource.getInputStream()) {
-			return new XmlDataSet(inputStream);
+			return new XmlDataSet(inputStream, datasetId);
 		}
 	}
 
