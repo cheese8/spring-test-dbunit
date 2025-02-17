@@ -25,7 +25,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.dbunit.DataSourceDatabaseTester;
 import org.dbunit.assertion.FailureHandler;
 import org.dbunit.database.*;
 import org.dbunit.dataset.*;

@@ -7,7 +7,7 @@
 	<packaging>pom</packaging>
 	<name>Spring Test DBUnit Parent</name>
 	<modules>
-		<module>cheese8-dbunit-mirror</module>
+		<module>../dbunit/dbunit-ywh</module>
 		<module>spring-test-dbunit</module>
 		<module>spring-test-dbunit-sample</module>
 	</modules>
