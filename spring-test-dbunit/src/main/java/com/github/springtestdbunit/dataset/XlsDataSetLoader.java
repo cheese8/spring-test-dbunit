@@ -32,7 +32,7 @@ public class XlsDataSetLoader extends AbstractDataSetLoader {
 
 	@Override
 	protected IDataSet createDataSet(final Resource resource, String datasetId) throws IOException, DataSetException {
-		return new XlsDataSet(resource.getFile());
+		return new XlsDataSet(resource.getFile(), datasetId);
 	}
 
 }
