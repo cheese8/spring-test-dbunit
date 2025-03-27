@@ -198,11 +198,11 @@ public class DbUnitRunner {
 		if ("csv".equalsIgnoreCase(format)) {
 			CsvDataSetWriter.write(queryDataSet, new File(fileName + "." + format));
 		} else if ("xml".equalsIgnoreCase(format)){
-			FlatXmlDataSet.write(queryDataSet, FileUtils.openOutputStream(new File(fileName + "." + format)), xmlElement, sortColumn, replacements);
+			FlatXmlDataSet.write(queryDataSet, FileUtils.openOutputStream(new File(fileName + "." + format)), xmlElement, sortColumn, replacements, "", true);
 		} else if ("json".equalsIgnoreCase(format)) {
 			JsonDataSet.write(queryDataSet, FileUtils.openOutputStream(new File(fileName + "." + format)), sortColumn, replacements);
 		} else if ("xls".equalsIgnoreCase(format) || "xlsx".equalsIgnoreCase(format)) {
-			XlsDataSet.write(queryDataSet, FileUtils.openOutputStream(new File(fileName+ "." + format)), sortColumn, replacements);
+			XlsDataSet.write(queryDataSet, FileUtils.openOutputStream(new File(fileName+ "." + format)), sortColumn, replacements, "", true);
 		} else if ("yml".equalsIgnoreCase(format) || "yaml".equalsIgnoreCase(format)) {
 			YamlDataSet.write(queryDataSet, FileUtils.openOutputStream(new File(fileName+ "." + format)), sortColumn, replacements);
 		}

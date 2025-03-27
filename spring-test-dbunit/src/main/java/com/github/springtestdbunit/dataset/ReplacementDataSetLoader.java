@@ -79,8 +79,7 @@ public class ReplacementDataSetLoader implements DataSetLoader {
 
 	public IDataSet loadDataSet(Class<?> testClass, String location, String datasetId) throws Exception {
 		IDataSet dataSet = this.dataSetLoader.loadDataSet(testClass, location, datasetId);
-		return new ReplacementDataSet(dataSet, this.objectReplacements,
-				this.subStringReplacements, functionReplacements);
+		return new ReplacementDataSet(dataSet);
 	}
 
 }

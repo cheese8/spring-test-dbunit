@@ -51,7 +51,7 @@ public class ExpectedQueryWithModifierOnMethodTest {
 
 		@Override
 		protected void addReplacements(ReplacementDataSet dataSet) {
-			dataSet.addReplacementSubstring("#", "");
+			//dataSet.addReplacementSubstring("#", "");
 		}
 
 	}
@@ -60,7 +60,7 @@ public class ExpectedQueryWithModifierOnMethodTest {
 
 		@Override
 		protected void addReplacements(ReplacementDataSet dataSet) {
-			dataSet.addReplacementSubstring("!", "");
+			//dataSet.addReplacementSubstring("!", "");
 		}
 
 	}
@@ -69,7 +69,7 @@ public class ExpectedQueryWithModifierOnMethodTest {
 
 		@Override
 		protected void addReplacements(ReplacementDataSet dataSet) {
-			dataSet.addReplacementSubstring("$", "");
+			//dataSet.addReplacementSubstring("$", "");
 		}
 
 	}
